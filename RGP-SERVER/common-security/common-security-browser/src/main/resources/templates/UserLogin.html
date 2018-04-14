@@ -1,0 +1,92 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>RGP SECURITY | LOG IN</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+        <!-- Bootstrap 3.3.6 -->
+        <link rel="stylesheet" href="../static/bootstrap/css/bootstrap.min.css" />
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="../static/remote/css/font-awesome.min.css" />
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="../static/remote/css/ionicons.min.css" />
+        <!-- Theme style -->
+        <link rel="stylesheet" href="../static/dist/css/AdminLTE.min.css" />
+        <!-- iCheck -->
+        <link rel="stylesheet" href="../static/plugins/iCheck/square/blue.css" />
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file -->
+        <script src="../static/remote/js/html5shiv.min.js"></script>
+        <script src="../static/remote/js/respond.min.js"></script>
+    </head>
+    <body class="hold-transition login-page" style="overflow:scroll;overflow-y:hidden">
+        <div class="login-box">
+            <div class="login-logo">
+                <b>RGP </b>LOGIN
+            </div>
+            <div class="login-box-body">
+                <p class="login-box-msg">Roberto's Growth Process</p>
+                <form action="/authentication/form" method="post" id="loginform">
+                    <div class="form-group has-feedback">
+                        <input type="text" name = "username" class="form-control" placeholder="请输入登录邮箱/登录名" /><span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <input type="password" name = "password" class="form-control" placeholder="请输入密码" /><span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <div class="col-xs-7" style="padding:0px">
+                            <input type="text" class="form-control" name="IMGCode" placeholder="请输入验证码" data-bv-field="captcha">
+                        </div>
+                        <div class="col-xs-5" style="text-align:right;padding-right: 0px;">
+                            <img src="/generateCaptcha/IMG" id="captchaImage" onclick="changeCaptcha()"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <span class="col-xs-12" style="color: red; margin-top: 10px;" th:if="${param.error}" th:text="${session.SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="checkbox icheck">
+                                <label>
+                                    <input type="checkbox" name="remember-me"/> 记住用户
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="checkbox pull-right">
+                                <a href="#">忘记密码</a>
+                                <span>&nbsp;/&nbsp;</span>
+                                <a href="/register" class="text-center">注册</a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- jQuery 2.2.3 -->
+        <script src="../static/plugins/jQuery/jquery-2.2.3.min.js"></script>
+        <!-- Bootstrap 3.3.6 -->
+        <script src="../static/bootstrap/js/bootstrap.min.js"></script>
+        <!-- iCheck -->
+        <script src="../static/plugins/iCheck/icheck.min.js"></script>
+        <script>
+            $(function () {
+                $('input').iCheck({
+                    checkboxClass: 'icheckbox_square-blue',
+                    radioClass: 'iradio_square-blue',
+                    increaseArea: '20%'
+                });
+            });
+
+            function changeCaptcha(){
+                $("#captchaImage").attr('src', $("#captchaImage")[0].src + "?randNumber=" + Math.random());
+            }
+        </script>
+    </body>
+</html>

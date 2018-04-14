@@ -1,0 +1,15 @@
+server:
+  port: 8881
+
+eureka:
+  instance:
+    # 服务主机名称
+    hostname: localhost
+  client:
+    # 是否从Eureka Server获取注册信息
+    fetch-registry: false
+    # 是否将自己注册到Eureka Server中
+    register-with-eureka: false
+    serviceUrl:
+      # Eureka服务地址
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/

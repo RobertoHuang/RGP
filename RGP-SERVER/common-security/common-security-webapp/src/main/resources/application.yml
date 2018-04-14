@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/RGP-UC?useUnicode=yes&characterEncoding=UTF-8&useSSL=false
+  session:
+    store-type: none
+  mvc:
+    throw-exception-if-no-handler-found: false
+
+security:
+  basic:
+    enabled: false
+
+
