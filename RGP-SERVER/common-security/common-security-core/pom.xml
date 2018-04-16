@@ -58,9 +58,9 @@
 
         <!-- Kaptcha验证码Start -->
         <dependency>
-            <groupId>com.google.code.kaptcha</groupId>
+            <groupId>com.github.axet</groupId>
             <artifactId>kaptcha</artifactId>
-            <version>2.3</version>
+            <version>0.0.9</version>
         </dependency>
         <!-- Kaptcha验证码End -->
 
