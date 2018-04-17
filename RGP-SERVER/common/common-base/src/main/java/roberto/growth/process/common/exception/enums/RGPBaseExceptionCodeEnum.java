@@ -13,16 +13,16 @@ package roberto.growth.process.common.exception.enums;
 import lombok.Getter;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈RGP通用异常码枚举类〉
  *
  * @author HuangTaiHong
- * @create 2018-04-03 
+ * @create 2018-04-03
  * @since 1.0.0
  */
 @Getter
 public enum RGPBaseExceptionCodeEnum {
-    DATABASE_CONNECTION_ERROR("E00001", "数据库连接失败");
+    DATABASE_CONNECTION_ERROR("E00001", "数据库连接失败"), GET_LOCAL_IPADDRESS_ERROR("E00002", "获取本地IP地址失败");
 
     private final String code;
     private final String value;

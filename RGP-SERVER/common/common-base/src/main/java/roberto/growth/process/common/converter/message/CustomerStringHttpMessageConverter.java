@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.common.converter;
+package roberto.growth.process.common.converter.message;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -18,7 +18,7 @@ package roberto.growth.process.common.generator;
  * @create 2018-02-26
  * @since 1.0.0
  */
-public interface IdentifierGenerator {
+public interface IdentifierGenerator<T> {
     /**
      * 功能描述: <br>
      * 〈生成ID〉
@@ -29,5 +29,5 @@ public interface IdentifierGenerator {
      * @Author:HuangTaiHong
      * @Date: 2018/2/26 下午 2:42
      */
-    Object generate();
+    T generate();
 }

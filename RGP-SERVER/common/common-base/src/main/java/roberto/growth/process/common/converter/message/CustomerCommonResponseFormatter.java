@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.common.converter;
+package roberto.growth.process.common.converter.message;
 
 import com.alibaba.fastjson.JSONObject;
 import roberto.growth.process.common.response.RGPGenericResponse;

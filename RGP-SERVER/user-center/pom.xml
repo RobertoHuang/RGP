@@ -15,6 +15,5 @@
     <modules>
         <module>user-center-api</module>
         <module>user-center-service</module>
-        <module>user-center-base</module>
     </modules>
 </project>

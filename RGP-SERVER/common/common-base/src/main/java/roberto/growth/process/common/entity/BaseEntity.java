@@ -12,8 +12,9 @@ package roberto.growth.process.common.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import roberto.growth.process.common.converter.database.DateConverter;
 
-import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -26,31 +27,37 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class BaseEntity implements Serializable{
-    private static final long serialVersionUID = -1999912863684532509L;
-
+@MappedSuperclass
+public abstract class BaseEntity {
     /**
      * 主键
      **/
-    protected String id;
+    @Id
+    protected Long id;
 
     /**
      * 创建时间
      **/
+    @Column(name = "create_date")
+    @Convert(converter = DateConverter.class)
     protected Date createDate;
 
     /**
      * 创建者
      **/
+    @Column(name = "create_by")
     protected String createBy;
 
     /**
      * 修改时间
      **/
+    @Column(name = "update_date")
+    @Convert(converter = DateConverter.class)
     protected Date updateDate;
 
     /**
      * 修改人
      **/
+    @Column(name = "update_by")
     protected String updateBy;
 }

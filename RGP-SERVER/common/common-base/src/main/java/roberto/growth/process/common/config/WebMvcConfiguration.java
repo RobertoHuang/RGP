@@ -25,8 +25,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import roberto.growth.process.common.converter.CustomerFastJsonHttpMessageConverter;
-import roberto.growth.process.common.converter.CustomerStringHttpMessageConverter;
+import roberto.growth.process.common.converter.message.CustomerFastJsonHttpMessageConverter;
+import roberto.growth.process.common.converter.message.CustomerStringHttpMessageConverter;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
