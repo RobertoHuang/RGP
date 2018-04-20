@@ -35,10 +35,6 @@ public class RGPGenericResponse {
         this.meta = new Meta(code);
     }
 
-    public RGPGenericResponse(String path, Integer code, String exception, String friendlyMsg) {
-        this.meta = new Meta(path, code, exception, friendlyMsg);
-    }
-
     public RGPGenericResponse(String path, Integer code, String exception, String friendlyMsg, Object errorMessages) {
         this.meta = new Meta(path, code, exception, friendlyMsg, errorMessages);
     }
@@ -90,13 +86,6 @@ public class RGPGenericResponse {
 
         public Meta(Integer retCode) {
             this.retCode = retCode;
-        }
-
-        public Meta(String path, Integer retCode, String exception, String friendlyMsg) {
-            this.path = path;
-            this.retCode = retCode;
-            this.exception = exception;
-            this.friendlyMsg = friendlyMsg;
         }
 
         public Meta(String path, Integer retCode, String exception, String friendlyMsg, Object errorMessages) {

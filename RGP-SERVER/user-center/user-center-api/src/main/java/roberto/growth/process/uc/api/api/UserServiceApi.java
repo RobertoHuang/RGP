@@ -11,8 +11,11 @@
 package roberto.growth.process.uc.api.api;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import roberto.growth.process.uc.api.exception.RGPUserCenterException;
 import roberto.growth.process.uc.api.vo.request.SaveUserRequest;
+import roberto.growth.process.uc.api.vo.request.ValidateUserRequest;
 import roberto.growth.process.uc.api.vo.response.SaveUserResponse;
+import roberto.growth.process.uc.api.vo.response.ValidateUserResponse;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -33,6 +36,19 @@ public interface UserServiceApi {
      * @Author:HuangTaiHong
      * @Date: 2018/4/16 下午 6:51
      */
-    @PostMapping(value = "/save")
+    @PostMapping(value = "/user/save")
     SaveUserResponse saveUser(SaveUserRequest saveUserRequest);
+
+    /**
+     * 功能描述: <br>
+     * 〈校验用户信息〉
+     *
+     * @param validateUserRequest
+     * @return:roberto.growth.process.uc.api.vo.response.ValidateUserResponse
+     * @since: 1.0.0
+     * @Author:HuangTaiHong
+     * @Date: 2018/4/18 上午 11:53
+     */
+    @PostMapping(value = "/user/validate")
+    ValidateUserResponse validateUser(ValidateUserRequest validateUserRequest) throws RGPUserCenterException;
 }

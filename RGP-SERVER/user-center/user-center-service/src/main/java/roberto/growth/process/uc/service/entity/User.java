@@ -31,8 +31,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "USER")
 public class User extends BaseEntity{
-    private static final long serialVersionUID = -6521944219813141793L;
-
     @Column(name = "username")
     private String username;
 
@@ -43,5 +41,5 @@ public class User extends BaseEntity{
     private String phoneNumber;
 
     @Column(name = "email_address")
-    private String emialAddress;
+    private String emailAddress;
 }

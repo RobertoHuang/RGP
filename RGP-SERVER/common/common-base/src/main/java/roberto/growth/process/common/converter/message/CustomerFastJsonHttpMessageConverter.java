@@ -1,6 +1,6 @@
 /**
  * Copyright (C), 2015-2018, ND Co., Ltd.
- * FileName: CustomerMappingJacksonConverter
+ * FileName: CustomerFastJsonHttpMessageConverter
  * Author:   HuangTaiHong
  * Date:     2018-02-23 下午 3:14
  * Description: 自定义FastJson消息转换器
@@ -29,6 +29,13 @@ import java.io.IOException;
 public class CustomerFastJsonHttpMessageConverter extends FastJsonHttpMessageConverter {
     @Override
     protected void writeInternal(Object object, HttpOutputMessage outputMessage) throws IOException, HttpMessageNotWritableException {
-        super.writeInternal(new RGPGenericResponse(HttpStatus.OK.value(), object), outputMessage);
+        // 若已为标准响应格式
+        // 或请求来自FEIGN则直接返回
+        // 否则将响应对象包装成标准响应格式
+        if (object instanceof RGPGenericResponse) {
+            super.writeInternal(object, outputMessage);
+        } else {
+            super.writeInternal(new RGPGenericResponse(HttpStatus.OK.value(), object), outputMessage);
+        }
     }
 }

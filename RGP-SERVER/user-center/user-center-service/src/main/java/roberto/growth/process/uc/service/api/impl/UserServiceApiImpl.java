@@ -12,12 +12,15 @@ package roberto.growth.process.uc.service.api.impl;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roberto.growth.process.common.generator.impl.TwitterSnowflakeGenerator;
 import roberto.growth.process.uc.api.api.UserServiceApi;
+import roberto.growth.process.uc.api.exception.RGPUserCenterException;
+import roberto.growth.process.uc.api.vo.domain.UserDetail;
 import roberto.growth.process.uc.api.vo.request.SaveUserRequest;
+import roberto.growth.process.uc.api.vo.request.ValidateUserRequest;
 import roberto.growth.process.uc.api.vo.response.SaveUserResponse;
+import roberto.growth.process.uc.api.vo.response.ValidateUserResponse;
 import roberto.growth.process.uc.service.entity.User;
 import roberto.growth.process.uc.service.service.UserService;
 
@@ -32,7 +35,6 @@ import java.util.Date;
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/user")
 public class UserServiceApiImpl implements UserServiceApi {
     @Autowired
     private UserService userService;
@@ -46,20 +48,28 @@ public class UserServiceApiImpl implements UserServiceApi {
         User user = new User();
         BeanUtils.copyProperties(saveUserRequest, user);
         user.setId(twitterSnowflakeGenerator.generate());
-        user.setCreateBy(saveUserRequest.getUsername());
-        user.setCreateDate(new Date());
-        user.setUpdateBy(saveUserRequest.getUsername());
-        user.setUpdateDate(new Date());
+        user.setCreator(saveUserRequest.getUsername());
+        user.setCreateTime(new Date());
+        user.setUpdater(saveUserRequest.getUsername());
+        user.setUpdateTime(new Date());
         user = userService.saveUser(user);
 
         // 返回响应数据
-        SaveUserResponse saveUserResponse = new SaveUserResponse();
-        BeanUtils.copyProperties(user, saveUserResponse);
-        return saveUserResponse;
+        UserDetail userDetail = new UserDetail();
+        BeanUtils.copyProperties(user, userDetail);
+        return new SaveUserResponse(userDetail);
     }
 
-    @RequestMapping(value = "/hello")
-    public String sayHello() {
-        return "HELLO WORLD";
+    @Override
+    public ValidateUserResponse validateUser(ValidateUserRequest validateUserRequest) throws RGPUserCenterException {
+        // 校验用户名密码
+        String usernmae = validateUserRequest.getUsername();
+        String password = validateUserRequest.getPassword();
+        User user = userService.validateUser("123", "456");
+
+        // 返回响应数据
+        UserDetail userDetail = new UserDetail();
+        BeanUtils.copyProperties(user, userDetail);
+        return new ValidateUserResponse(userDetail);
     }
 }

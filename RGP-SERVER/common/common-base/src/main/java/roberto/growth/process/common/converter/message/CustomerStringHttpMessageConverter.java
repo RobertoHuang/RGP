@@ -10,9 +10,11 @@
  */
 package roberto.growth.process.common.converter.message;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import roberto.growth.process.common.response.RGPGenericResponse;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -32,8 +34,8 @@ public class CustomerStringHttpMessageConverter extends StringHttpMessageConvert
     protected Long getContentLength(String data, MediaType contentType) {
         Charset charset = getContentTypeCharset(contentType);
         try {
-            String writeStr = CustomerCommonResponseFormatter.format(HttpStatus.OK.value(), data);
-            return (long) writeStr.getBytes(charset.name()).length;
+            String response = JSONObject.toJSONString(new RGPGenericResponse(HttpStatus.OK.value(), data));
+            return (long) response.getBytes(charset.name()).length;
         } catch (UnsupportedEncodingException ex) {
             throw new IllegalStateException(ex);
         }

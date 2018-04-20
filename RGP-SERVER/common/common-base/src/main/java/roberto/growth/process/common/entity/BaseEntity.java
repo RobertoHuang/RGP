@@ -29,35 +29,24 @@ import java.util.Date;
 @Setter
 @MappedSuperclass
 public abstract class BaseEntity {
-    /**
-     * 主键
-     **/
     @Id
     protected Long id;
 
-    /**
-     * 创建时间
-     **/
-    @Column(name = "create_date")
+    /** 创建者 **/
+    @Column(name = "creator")
+    protected String creator;
+
+    /** 创建时间 **/
+    @Column(name = "create_time")
     @Convert(converter = DateConverter.class)
-    protected Date createDate;
+    protected Date createTime;
 
-    /**
-     * 创建者
-     **/
-    @Column(name = "create_by")
-    protected String createBy;
+    /** 修改人 **/
+    @Column(name = "updater")
+    protected String updater;
 
-    /**
-     * 修改时间
-     **/
-    @Column(name = "update_date")
+    /** 修改时间 **/
+    @Column(name = "update_time")
     @Convert(converter = DateConverter.class)
-    protected Date updateDate;
-
-    /**
-     * 修改人
-     **/
-    @Column(name = "update_by")
-    protected String updateBy;
+    protected Date updateTime;
 }

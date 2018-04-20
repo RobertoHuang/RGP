@@ -12,16 +12,19 @@ package roberto.growth.process.uc.service.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import roberto.growth.process.common.utils.ObjectUtils;
+import roberto.growth.process.uc.api.enums.RGPUserCenterExceptionCodeEnum;
+import roberto.growth.process.uc.api.exception.RGPUserCenterException;
 import roberto.growth.process.uc.service.entity.User;
 import roberto.growth.process.uc.service.repository.UserRepository;
 import roberto.growth.process.uc.service.service.UserService;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈用户Service层实现〉
  *
  * @author HuangTaiHong
- * @create 2018-04-13 
+ * @create 2018-04-13
  * @since 1.0.0
  */
 @Service
@@ -32,5 +35,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public User validateUser(String username, String password) throws RGPUserCenterException {
+        User user = userRepository.findUserByUsername(username);
+        if (ObjectUtils.isEmpty(user)) {
+            throw new RGPUserCenterException(RGPUserCenterExceptionCodeEnum.USERNAME_NOT_FOUNT);
+        } else {
+            if (!user.getPassword().equals(password)) {
+                throw new RGPUserCenterException(RGPUserCenterExceptionCodeEnum.USERNAME_PASSWORD_NOT_MATCH);
+            } else {
+                return user;
+            }
+        }
     }
 }

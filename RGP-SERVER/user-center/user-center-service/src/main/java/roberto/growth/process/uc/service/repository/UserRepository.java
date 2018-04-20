@@ -22,5 +22,15 @@ import roberto.growth.process.uc.service.entity.User;
  * @since 1.0.0
  */
 public interface UserRepository extends JpaRepository<User, String> {
-
+    /**
+     * 功能描述: <br>
+     * 〈通过用户名查找用户信息〉
+     *
+     * @param username
+     * @return:roberto.growth.process.uc.service.entity.User
+     * @since: 1.0.0
+     * @Author:HuangTaiHong
+     * @Date: 2018/4/18 下午 1:58
+     */
+    User findUserByUsername(String username);
 }

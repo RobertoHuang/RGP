@@ -13,7 +13,6 @@ package roberto.growth.process.common.handler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
@@ -21,14 +20,16 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import roberto.growth.process.common.converter.message.CustomerCommonResponseFormatter;
+import roberto.growth.process.common.response.RGPGenericResponse;
+import roberto.growth.process.common.utils.ObjectUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -41,100 +42,77 @@ import java.util.List;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public void handlerNoHandlerFoundException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        commonExceptionHandler(request, response, HttpStatus.NOT_FOUND.value(), "请求的资源不存在", ex);
+    /**
+     * 保存异常与异常码异常信息对应关系
+     **/
+    private final static Map<Class, HttpStatus> exceptionCodeAndMessageMap = new HashMap<>();
+
+    static {
+        exceptionCodeAndMessageMap.put(NoHandlerFoundException.class, HttpStatus.NOT_FOUND);
+        exceptionCodeAndMessageMap.put(MethodArgumentNotValidException.class, HttpStatus.BAD_REQUEST);
+        exceptionCodeAndMessageMap.put(HttpRequestMethodNotSupportedException.class, HttpStatus.METHOD_NOT_ALLOWED);
+        exceptionCodeAndMessageMap.put(HttpMediaTypeNotSupportedException.class, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }
 
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public void handlerHttpRequestMethodNotSupportedException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        commonExceptionHandler(request, response, HttpStatus.METHOD_NOT_ALLOWED.value(), "不支持的请求类型", ex);
-    }
-
-    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public void handlerHttpMediaTypeNotSupportedException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        commonExceptionHandler(request, response, HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(), "不支持的媒体类型", ex);
+    @ResponseBody
+    @ExceptionHandler(value = {
+            Exception.class,
+            NoHandlerFoundException.class,
+            HttpRequestMethodNotSupportedException.class,
+            HttpMediaTypeNotSupportedException.class})
+    public RGPGenericResponse handlerNoHandlerFoundException(HttpServletRequest request, Exception exception) {
+        return this.wrapperExceptionResponse(request, exception);
     }
 
     // 参数校验错误异常处理
+    @ResponseBody
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public void handMethodArgumentNotValidException(HttpServletRequest request, HttpServletResponse response, MethodArgumentNotValidException ex) {
+    public RGPGenericResponse handMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException exception) {
         // 按需重新封装需要返回的错误信息
         List<ParamValidationResult> paramValidationResults = new ArrayList<>();
         // 解析原错误信息封装后返回，此处返回非法的字段名称，错误信息
-        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+        for (FieldError error : exception.getBindingResult().getFieldErrors()) {
             ParamValidationResult validationResult = new ParamValidationResult();
             validationResult.setParam(error.getField());
             validationResult.setMessage(error.getDefaultMessage());
             paramValidationResults.add(validationResult);
         }
-        commonExceptionHandler(request, response, HttpStatus.BAD_REQUEST.value(), "请求的参数有误，请确认后重试", paramValidationResults, ex);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public void handlerException(HttpServletRequest request, HttpServletResponse response, Exception ex) {
-        commonExceptionHandler(request, response, HttpStatus.INTERNAL_SERVER_ERROR.value(), "服务器内部错误，请联系管理员", ex);
+        return this.wrapperExceptionResponse(request, exception,paramValidationResults);
     }
 
     /**
      * 功能描述: <br>
-     * 〈通用全局异常消息处理器〉
+     * 〈封装异常响应信息〉
      *
      * @param request
-     * @param response
-     * @param retCode
-     * @param friendlyMsg
-     * @param ex
-     * @return:void
+     * @param exception
+     * @return:roberto.growth.process.common.response.RGPGenericResponse
      * @since: 1.0.0
      * @Author:HuangTaiHong
-     * @Date: 2018/3/20 下午 7:19
+     * @Date: 2018/4/19 下午 4:34
      */
-    public void commonExceptionHandler(HttpServletRequest request, HttpServletResponse response, Integer retCode, String friendlyMsg, Exception ex) {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpStatus.OK.value());
-
-        String requestPath = request.getRequestURI();
-        String exceptionName = ex.getClass().getName();
-        String exceptionResponse = CustomerCommonResponseFormatter.formatWithException(requestPath, retCode, exceptionName, friendlyMsg);
-
-        try {
-            IOUtils.write(exceptionResponse, response.getWriter());
-        } catch (IOException e) {
-            log.error("全局异常响应处理器出错啦~", e);
-        }
+    public RGPGenericResponse wrapperExceptionResponse(HttpServletRequest request, Exception exception) {
+        return this.wrapperExceptionResponse(request, exception, null);
     }
 
     /**
      * 功能描述: <br>
-     * 〈通用全局异常消息处理器〉
+     * 〈封装异常响应信息〉
      *
      * @param request
-     * @param response
-     * @param retCode
-     * @param friendlyMsg
+     * @param exception
      * @param errorMessages
-     * @param ex
-     * @return:void
+     * @return:roberto.growth.process.common.response.RGPGenericResponse
      * @since: 1.0.0
      * @Author:HuangTaiHong
-     * @Date: 2018/3/20 下午 7:20
+     * @Date: 2018/4/19 下午 4:33
      */
-    public void commonExceptionHandler(HttpServletRequest request, HttpServletResponse response, Integer retCode, String friendlyMsg, Object errorMessages, Exception ex) {
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpStatus.OK.value());
-
+    public RGPGenericResponse wrapperExceptionResponse(HttpServletRequest request, Exception exception, Object errorMessages) {
         String requestPath = request.getRequestURI();
-        String exceptionName = ex.getClass().getName();
-        String exceptionResponse = CustomerCommonResponseFormatter.formatWithException(requestPath, retCode, exceptionName, friendlyMsg, errorMessages);
-
-        try {
-            IOUtils.write(exceptionResponse, response.getWriter());
-        } catch (IOException e) {
-            log.error("全局异常响应处理器出错啦~", e);
-        }
+        String exceptionName = exception.getClass().getName();
+        HttpStatus status = exceptionCodeAndMessageMap.get(exception.getClass());
+        status = ObjectUtils.isEmpty(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+        return new RGPGenericResponse(requestPath, status.value(), exceptionName, status.getReasonPhrase(), errorMessages);
     }
 
 

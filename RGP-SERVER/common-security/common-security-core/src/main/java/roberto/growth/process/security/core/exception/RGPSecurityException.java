@@ -22,6 +22,8 @@ import roberto.growth.process.security.core.enums.RGPSecurityExceptionCodeEnum;
  * @since 1.0.0
  */
 public class RGPSecurityException extends RGPBaseException {
+    private static final long serialVersionUID = 6353680232816768748L;
+
     public RGPSecurityException(RGPSecurityExceptionCodeEnum exceptionCodeEnum) {
         super(exceptionCodeEnum.getCode(), exceptionCodeEnum.getValue());
     }
