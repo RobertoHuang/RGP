@@ -36,7 +36,7 @@ import java.time.Duration;
 /**
  * 〈一句话功能简述〉<br>
  * 〈Redis缓存配置〉
- * <p>
+ *
  * Lettuce是可伸缩线程安全的Redis客户端
  * 多个线程可以共享同一个RedisConnection
  * 它利用优秀netty NIO框架来高效地管理多个连接
@@ -100,7 +100,6 @@ public class RedisConfiguration {
                 .commandTimeout(redisStandaloneProperties.getCommandTimeout())
                 .shutdownTimeout(redisStandaloneProperties.getShutdownTimeout())
                 .poolConfig(jedisPoolConfig()).build();
-
 
         return new LettuceConnectionFactory(redisStandaloneConfiguration, lettucePoolingClientConfiguration);
     }

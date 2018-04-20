@@ -1,9 +1,14 @@
 spring:
   application:
-    name: API-GATEWAY
+    name: CONFIG-SERVICE
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/RobertoHuang/RGP
 
 server:
-  port: 8882
+  port: 8885
 
 eureka:
   client:
@@ -13,9 +18,3 @@ eureka:
       defaultZone: http://localhost:8881/eureka
   instance:
     prefer-ip-address: true
-
-zuul:
-  routes:
-    USER-CENTER:
-      path: /USER-CENTER/**
-      serviceId: USER-CENTER
