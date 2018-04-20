@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    config:
+      profile: dev
+      label: develop
+      name: usercenter
+      uri: http://localhost:8885/

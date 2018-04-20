@@ -111,7 +111,7 @@ public class GlobalExceptionHandler {
         String requestPath = request.getRequestURI();
         String exceptionName = exception.getClass().getName();
         HttpStatus status = exceptionCodeAndMessageMap.get(exception.getClass());
-        status = ObjectUtils.isEmpty(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+        status = ObjectUtils.isNotEmpty(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
         return new RGPGenericResponse(requestPath, status.value(), exceptionName, status.getReasonPhrase(), errorMessages);
     }
 

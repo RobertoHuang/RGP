@@ -10,6 +10,7 @@
  */
 package com.roberto.growth.process.uc.test;
 
+import org.springframework.beans.factory.annotation.Value;
 import roberto.growth.process.uc.service.UCServiceApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,11 +41,18 @@ public class SpringBootMockMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Value("${roberto}")
+    private String username;
     @Test
     public void testBaiDu() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/hello")
                 .accept(MediaType.APPLICATION_ATOM_XML))
                 .andExpect(status().isOk())
                 .andExpect(content().string(equalTo("HELLO WORLD")));
+    }
+
+    @Test
+    public void testSpringCloudConfig() {
+        System.out.println(username);
     }
 }

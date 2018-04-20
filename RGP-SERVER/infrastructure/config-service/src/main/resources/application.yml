@@ -5,8 +5,8 @@ spring:
     config:
       server:
         git:
+          search-paths: RGP-CONFIG
           uri: https://github.com/RobertoHuang/RGP
-
 server:
   port: 8885
 
