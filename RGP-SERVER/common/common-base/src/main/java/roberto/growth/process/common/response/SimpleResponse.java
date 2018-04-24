@@ -10,9 +10,9 @@
  */
 package roberto.growth.process.common.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.AllArgsConstructor;
 
 /**
  * 〈一句话功能简述〉<br>

@@ -41,7 +41,7 @@ public class TestUserController {
 
     @RequestMapping(value = "/user/get")
     public ResponseEntity<User> getUser() {
-        String id = "41237917849620480";
+        String id = "41280540844257280";
         return new ResponseEntity( userService.getUserInfo(id), HttpStatus.OK);
     }
 }
