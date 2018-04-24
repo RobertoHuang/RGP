@@ -25,7 +25,6 @@ import roberto.growth.process.common.config.properties.RedisStandaloneProperties
  */
 @Configuration
 public class RedisConfig {
-
     @Bean
     public RedisPoolProperties redisPoolProperties() {
         return new RedisPoolProperties();

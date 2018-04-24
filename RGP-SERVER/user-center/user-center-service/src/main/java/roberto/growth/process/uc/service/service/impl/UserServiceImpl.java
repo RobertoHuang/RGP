@@ -11,6 +11,8 @@
 package roberto.growth.process.uc.service.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import roberto.growth.process.common.utils.ObjectUtils;
 import roberto.growth.process.uc.api.enums.RGPUserCenterExceptionCodeEnum;
@@ -28,11 +30,13 @@ import roberto.growth.process.uc.service.service.UserService;
  * @since 1.0.0
  */
 @Service
+@EnableCaching
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
     @Override
+    @Cacheable(value = "USER_",key = "#user.id")
     public User saveUser(User user) {
         return userRepository.save(user);
     }
@@ -49,5 +53,11 @@ public class UserServiceImpl implements UserService {
                 return user;
             }
         }
+    }
+
+    @Override
+    @Cacheable(value = "USER_",key = "#userId")
+    public User getUserInfo(String userId) {
+        return userRepository.getOne(userId);
     }
 }

@@ -120,7 +120,7 @@ public class RedisConfiguration {
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ZERO)
                 .disableCachingNullValues()
-                .computePrefixWith(cacheName -> "RGP:".concat(projectName).concat(":").concat("OOO"))
+                .computePrefixWith(cacheName -> "RGP:".concat(projectName).concat(":").concat(cacheName))
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new FastJsonRedisSerializer(Object.class)))
                 .withConversionService(new DefaultConversionService());

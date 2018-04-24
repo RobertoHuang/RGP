@@ -46,4 +46,6 @@ public interface UserService {
      * @Date: 2018/4/18 上午 11:58
      */
     User validateUser(String username,String password) throws RGPUserCenterException;
+
+    User getUserInfo(String userId);
 }
