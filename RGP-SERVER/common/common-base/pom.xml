@@ -57,13 +57,13 @@
         </dependency>
         <!-- Spring Rabbit End -->
 
-        <!-- Swagger Start -->
+        <!-- Swagger BNG -->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>2.7.0</version>
         </dependency>
-        <!-- Swagger End -->
+        <!-- Swagger END -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
