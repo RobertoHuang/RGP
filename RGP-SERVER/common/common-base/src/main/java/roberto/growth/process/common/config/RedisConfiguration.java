@@ -10,7 +10,7 @@
  */
 package roberto.growth.process.common.config;
 
-import com.alibaba.fastjson.support.spring.FastJsonRedisSerializer;
+import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.cache.CacheManager;
@@ -36,7 +36,7 @@ import java.time.Duration;
 /**
  * 〈一句话功能简述〉<br>
  * 〈Redis缓存配置〉
- *
+ * <p>
  * Lettuce是可伸缩线程安全的Redis客户端
  * 多个线程可以共享同一个RedisConnection
  * 它利用优秀netty NIO框架来高效地管理多个连接
@@ -122,7 +122,7 @@ public class RedisConfiguration {
                 .disableCachingNullValues()
                 .computePrefixWith(cacheName -> "RGP:".concat(projectName).concat(":").concat(cacheName))
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new FastJsonRedisSerializer(Object.class)))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericFastJsonRedisSerializer()))
                 .withConversionService(new DefaultConversionService());
 
         return RedisCacheManager.builder(lettuceConnectionFactory).cacheDefaults(cacheConfiguration).build();

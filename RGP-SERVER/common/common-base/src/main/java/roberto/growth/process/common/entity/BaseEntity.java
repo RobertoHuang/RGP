@@ -14,7 +14,10 @@ import lombok.Getter;
 import lombok.Setter;
 import roberto.growth.process.common.converter.database.DateConverter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
 /**
