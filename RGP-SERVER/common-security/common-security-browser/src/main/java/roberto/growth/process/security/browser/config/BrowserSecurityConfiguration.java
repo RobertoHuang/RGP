@@ -14,11 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -27,10 +24,8 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import roberto.growth.process.common.utils.DatabaseUtils;
-import roberto.growth.process.security.browser.handler.CustomerAuthenticationFailureHandler;
-import roberto.growth.process.security.browser.handler.CustomerAuthenticationSuccessHandler;
-import roberto.growth.process.security.core.authentication.RGPSecurityAuthenticationFilter;
-import roberto.growth.process.security.core.authentication.RGPSecurityAuthenticationProvider;
+import roberto.growth.process.security.browser.authentication.mobile.SMSCaptchaAuthenticationConfig;
+import roberto.growth.process.security.browser.service.CustomerUserDetailsService;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 
@@ -56,40 +51,46 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private CustomerUserDetailsService customerUserDetailsService;
 
     @Resource
     private CustomerSecurityProperties customerSecurityProperties;
 
+    @Autowired
+    private SMSCaptchaAuthenticationConfig smsCaptchaAuthenticationConfig;
 
+    @Resource(name = "customerAuthenticationSuccessHandler")
+    private AuthenticationSuccessHandler customerAuthenticationSuccessHandler;
+
+    @Resource(name = "customerAuthenticationFailureHandler")
+    private AuthenticationFailureHandler customerAuthenticationFailureHandler;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        RGPSecurityAuthenticationFilter rgpSecurityAuthenticationFilter = new RGPSecurityAuthenticationFilter();
-        rgpSecurityAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        http.formLogin()
+        http.apply(smsCaptchaAuthenticationConfig)
+                .and()
+            .formLogin()
                 // 配置登录页
                 .loginPage(customerSecurityProperties.getBrowser().getLoginPage())
                 // 配置登录成功处理
-                .successHandler(authenticationSuccessHandler())
+                .successHandler(customerAuthenticationSuccessHandler)
                 // 配置登录失败处理
-                .failureHandler(authenticationFailureHandler())
+                .failureHandler(customerAuthenticationFailureHandler)
                 // 配置登录处理请求
-                .loginProcessingUrl(customerSecurityProperties.getBrowser().getLoginProcessingUrl()).and()
+                .loginProcessingUrl(customerSecurityProperties.getBrowser().getFormLoginProcessUrl()).and()
             .authorizeRequests()
                 .antMatchers(
                         SecurityConstants.STATIC_RESOURCE,
                         SecurityConstants.GENERATE_CAPTCHA_URL_NOT_INTERCEPT,
                         customerSecurityProperties.getBrowser().getLoginPage(),
-                        customerSecurityProperties.getBrowser().getLoginProcessingUrl()).permitAll()
+                        customerSecurityProperties.getBrowser().getFormLoginProcessUrl(),
+                        customerSecurityProperties.getBrowser().getMobileLoginProcessUrl()).permitAll()
                 .anyRequest().authenticated().and()
             .rememberMe()
-                .userDetailsService(userDetailsService)
+                .userDetailsService(customerUserDetailsService)
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(customerSecurityProperties.getBrowser().getRememberMeSeconds()).and()
             .addFilterBefore(verifyCaptchaFilter, AbstractPreAuthenticatedProcessingFilter.class)
-            .addFilterAt(rgpSecurityAuthenticationFilter,verifyCaptchaFilter.getClass())
-            .authenticationProvider(authenticationProvider())
             .csrf().disable();
     }
 
@@ -99,26 +100,6 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean(name = "customerAuthenticationFailureHandler")
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        CustomerAuthenticationFailureHandler customerAuthenticationFailureHandler = new CustomerAuthenticationFailureHandler();
-        customerAuthenticationFailureHandler.setDefaultFailureUrl(customerSecurityProperties.getBrowser().getLoginPage() + "?error=true");
-        return customerAuthenticationFailureHandler;
-    }
-
-    @Bean(name = "customerAuthenticationSuccessHandler")
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        CustomerAuthenticationSuccessHandler customerAuthenticationSuccessHandler = new CustomerAuthenticationSuccessHandler();
-        customerAuthenticationSuccessHandler.setDefaultTargetUrl("/home");
-        customerAuthenticationSuccessHandler.setAlwaysUseDefaultTargetUrl(true);
-        return customerAuthenticationSuccessHandler;
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        RGPSecurityAuthenticationProvider authenticationProvider = new RGPSecurityAuthenticationProvider();
-        return authenticationProvider;
-    }
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();

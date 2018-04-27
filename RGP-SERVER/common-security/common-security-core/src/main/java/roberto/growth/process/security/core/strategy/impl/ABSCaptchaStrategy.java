@@ -35,7 +35,7 @@ public abstract class ABSCaptchaStrategy<C extends BaseCaptcha> implements Captc
     @Override
     public void createCaptcha(ServletWebRequest request) throws Exception {
         // 创建验证码
-        C captcha = this.generateCaptcha();
+        C captcha = this.generateCaptcha(request);
         // 将验证码保存到SESSION中
         sessionStrategy.setAttribute(request, this.getSessionKey(), captcha);
         // 发送验证码
@@ -62,13 +62,12 @@ public abstract class ABSCaptchaStrategy<C extends BaseCaptcha> implements Captc
      * 功能描述: <br>
      * 〈生成图形验证码〉
      *
-     * @param
-     * @return:C
-     * @since: 1.0.0
-     * @Author:HuangTaiHong
-     * @Date: 2018/3/29 上午 11:30
+     * @param request
+     * @return C
+     * @author HuangTaiHong
+     * @date 2018.04.26 11:59:08
      */
-    protected abstract C generateCaptcha();
+    protected abstract C generateCaptcha(ServletWebRequest request);
 
     /**
      * 功能描述: <br>

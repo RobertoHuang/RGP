@@ -24,18 +24,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BrowserProperties {
-    /**
-     * 登录页面地址
-     **/
+    /** 登录页面地址 **/
     private String loginPage = "/authentication/toLogin";
 
-    /**
-     * 登录处理请求地址
-     **/
-    private String loginProcessingUrl = "/authentication/form";
+    /** 用户名密码登录处理请求地址 **/
+    private String formLoginProcessUrl = "/authentication/form";
 
-    /**
-     * Rememberme有效时间
-     **/
+    /** 手机短信验证码登录处理请求地址 **/
+    private String mobileLoginProcessUrl = "/authentication/mobile";
+
+    /** Rememberme有效时间(默认为一周) **/
     private Integer rememberMeSeconds = 604800;
 }

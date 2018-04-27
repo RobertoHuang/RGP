@@ -23,28 +23,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈短信验证码校验过滤器〉
  *
  * @author HuangTaiHong
- * @create 2018-04-04 
+ * @create 2018-04-04
  * @since 1.0.0
  */
 @Getter
 @Setter
 public class SMSCaptchaAuthenticationFilter extends AbstractAuthenticationProcessingFilter{
     private boolean postOnly = true;
-
     private String mobileParameter = SecurityConstants.PARAMETER_NAME_SMS_CODE_REQUEST;
 
-    public SMSCaptchaAuthenticationFilter() {
-        super(new AntPathRequestMatcher("/login", "POST"));
+    public SMSCaptchaAuthenticationFilter(String filterUrl) {
+        super(new AntPathRequestMatcher(filterUrl, "POST"));
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,  HttpServletResponse response) throws AuthenticationException {
         if (postOnly && !request.getMethod().equals("POST")) {
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+            throw new AuthenticationServiceException("不支持非POST方式的请求!" + request.getMethod());
         }
 
         String mobile = obtainMobile(request);

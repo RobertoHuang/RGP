@@ -17,8 +17,10 @@ import roberto.growth.process.common.generator.impl.TwitterSnowflakeGenerator;
 import roberto.growth.process.uc.api.api.UserServiceApi;
 import roberto.growth.process.uc.api.exception.RGPUserCenterException;
 import roberto.growth.process.uc.api.vo.domain.UserDetail;
+import roberto.growth.process.uc.api.vo.request.GetUserByPhoneNumberRequest;
 import roberto.growth.process.uc.api.vo.request.SaveUserRequest;
 import roberto.growth.process.uc.api.vo.request.ValidateUserRequest;
+import roberto.growth.process.uc.api.vo.response.GetUserByPhoneNumberResponse;
 import roberto.growth.process.uc.api.vo.response.SaveUserResponse;
 import roberto.growth.process.uc.api.vo.response.ValidateUserResponse;
 import roberto.growth.process.uc.service.entity.User;
@@ -71,5 +73,20 @@ public class UserServiceApiImpl implements UserServiceApi {
         UserDetail userDetail = new UserDetail();
         BeanUtils.copyProperties(user, userDetail);
         return new ValidateUserResponse(userDetail);
+    }
+
+    @Override
+    public GetUserByPhoneNumberResponse getUserByPhoneNumber(GetUserByPhoneNumberRequest getUserByPhoneNumberRequest) throws RGPUserCenterException {
+        // 通过手机号码查找用户信息
+        String phoneNumber = getUserByPhoneNumberRequest.getPhoneNumber();
+        // User user = userService.getUserByPhoneNumber(phoneNumber);
+
+        // 返回响应数据
+        UserDetail userDetail = new UserDetail();
+        // BeanUtils.copyProperties(user, userDetail);
+        userDetail.setUsername("robertoHuang");
+        userDetail.setPhoneNumber("18649870156");
+        userDetail.setEmailAddress("robertohuang@foxmail.com");
+        return new GetUserByPhoneNumberResponse(userDetail);
     }
 }

@@ -17,11 +17,11 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import java.util.Collection;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈短信验证码凭证〉
  *
  * @author HuangTaiHong
- * @create 2018-04-03 
+ * @create 2018-04-03
  * @since 1.0.0
  */
 public class SMSCaptchaAuthenticationToken extends AbstractAuthenticationToken {

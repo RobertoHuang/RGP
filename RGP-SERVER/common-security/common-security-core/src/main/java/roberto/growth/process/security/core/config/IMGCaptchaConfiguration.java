@@ -37,7 +37,7 @@ public class IMGCaptchaConfiguration {
     @Bean
     public DefaultKaptcha captchaProducer() {
         // 获取图形验证码配置属性
-        IMGCaptchaProperties IMGCaptchaProperties = customerSecurityProperties.getCaptcha().getIMGCaptcha();
+        IMGCaptchaProperties IMGCaptchaProperties = customerSecurityProperties.getCaptcha().getImg();
 
         // 设置图形验证码配置属性
         Properties properties = new Properties();

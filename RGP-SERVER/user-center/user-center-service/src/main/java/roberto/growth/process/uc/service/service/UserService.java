@@ -47,5 +47,17 @@ public interface UserService {
      */
     User validateUser(String username,String password) throws RGPUserCenterException;
 
+    /**
+     * 功能描述: <br>
+     * 〈通过手机号码查找用户信息〉
+     *
+     * @param phoneNumber
+     * @return roberto.growth.process.uc.service.entity.User
+     * @throws RGPUserCenterException
+     * @author HuangTaiHong
+     * @date 2018.04.26 14:42:08
+     */
+    User getUserByPhoneNumber(String phoneNumber) throws RGPUserCenterException;
+
     User getUserInfo(String userId);
 }

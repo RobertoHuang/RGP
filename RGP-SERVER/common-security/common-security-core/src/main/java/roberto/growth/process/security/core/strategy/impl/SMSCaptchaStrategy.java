@@ -14,7 +14,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 import roberto.growth.process.security.core.constant.SecurityConstants;
@@ -24,15 +23,15 @@ import roberto.growth.process.security.core.properties.CustomerSecurityPropertie
 import roberto.growth.process.security.core.utils.SendSMSCaptchaUtils;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈手机短信验证码策略〉
  *
  * @author HuangTaiHong
- * @create 2018-03-29 
+ * @create 2018-03-29
  * @since 1.0.0
  */
 @Component
-public class SMSCaptchaStrategy extends ABSCaptchaStrategy<SMSCaptcha>{
+public class SMSCaptchaStrategy extends ABSCaptchaStrategy<SMSCaptcha> {
     @Autowired
     private CustomerSecurityProperties customerSecurityProperties;
 
@@ -41,9 +40,10 @@ public class SMSCaptchaStrategy extends ABSCaptchaStrategy<SMSCaptcha>{
     private final String PARAMNAME_ON_VALIDATE = SecurityConstants.PARAMETER_NAME_SMS_CODE_VALIDATE;
 
     @Override
-    protected SMSCaptcha generateCaptcha() {
-        String code = RandomStringUtils.randomNumeric(customerSecurityProperties.getCaptcha().getSMSCaptcha().getLength());
-        return new SMSCaptcha(code,customerSecurityProperties.getCaptcha().getSMSCaptcha().getExpireIn());
+    protected SMSCaptcha generateCaptcha(ServletWebRequest request) {
+        String phoneNumber = request.getRequest().getParameter(PARAMNAME_ON_REQUEST);
+        String captchaCode = RandomStringUtils.randomNumeric(customerSecurityProperties.getCaptcha().getSms().getLength());
+        return new SMSCaptcha(phoneNumber, captchaCode, customerSecurityProperties.getCaptcha().getSms().getExpireIn());
     }
 
     @Override
@@ -59,15 +59,12 @@ public class SMSCaptchaStrategy extends ABSCaptchaStrategy<SMSCaptcha>{
 
     @Override
     protected void validateCaptchaInStrategy(ServletWebRequest request, SMSCaptcha captcha) {
-        try {
-            String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), PARAMNAME_ON_VALIDATE);
-            if (StringUtils.isBlank(codeInRequest)) {
-                throw new ValidateCaptchaException("验证码的值不能为空");
-            } else if (!StringUtils.equals(captcha.getCode(), codeInRequest)) {
-                throw new ValidateCaptchaException("输入的验证码不正确");
-            }
-        } catch (ServletRequestBindingException e) {
-            throw new ValidateCaptchaException("获取验证码的值失败", e);
+        String codeInRequest = request.getRequest().getParameter(PARAMNAME_ON_VALIDATE);
+        String mobileInRequest = request.getRequest().getParameter(PARAMNAME_ON_REQUEST);
+        if (StringUtils.isBlank(codeInRequest)) {
+            throw new ValidateCaptchaException("验证码的值不能为空");
+        } else if (!StringUtils.equals(captcha.getMobile(), mobileInRequest) || !StringUtils.equals(captcha.getCode(), codeInRequest)) {
+            throw new ValidateCaptchaException("输入的验证码不正确");
         }
     }
 }

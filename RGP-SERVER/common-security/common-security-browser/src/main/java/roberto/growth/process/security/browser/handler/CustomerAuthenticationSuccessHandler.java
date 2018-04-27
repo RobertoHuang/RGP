@@ -32,7 +32,7 @@ public class CustomerAuthenticationSuccessHandler extends SavedRequestAwareAuthe
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         String accept = request.getHeader("Accept");
-        if (ContentType.APPLICATION_JSON.equals(accept)) {
+        if (ContentType.APPLICATION_JSON.getMimeType().equals(accept)) {
             response.setContentType("application/json;charset=UTF-8");
             response.getWriter().write(JSONObject.toJSONString(authentication));
         } else {

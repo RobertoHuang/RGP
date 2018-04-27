@@ -14,8 +14,6 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.ServletRequestBindingException;
-import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.context.request.ServletWebRequest;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.exception.ValidateCaptchaException;
@@ -45,13 +43,13 @@ public class IMGCaptchaStrategy extends ABSCaptchaStrategy<IMGCaptcha> {
     private final String PARAMNAME_ON_VALIDATE = SecurityConstants.DEFAULT_PARAMETER_NAME_CODE_IMG;
 
     @Override
-    protected IMGCaptcha generateCaptcha() {
+    protected IMGCaptcha generateCaptcha(ServletWebRequest request) {
         // 生成验证码
         String captcha = captchaProducer.createText();
         // 创建验证码图片
         BufferedImage bufferedImage = captchaProducer.createImage(captcha);
         // 返回图形验证码实体
-        return new IMGCaptcha(captcha, bufferedImage, customerSecurityProperties.getCaptcha().getIMGCaptcha().getExpireIn());
+        return new IMGCaptcha(captcha, bufferedImage, customerSecurityProperties.getCaptcha().getImg().getExpireIn());
     }
 
     @Override
@@ -66,15 +64,11 @@ public class IMGCaptchaStrategy extends ABSCaptchaStrategy<IMGCaptcha> {
 
     @Override
     protected void validateCaptchaInStrategy(ServletWebRequest request, IMGCaptcha captcha) {
-        try {
-            String codeInRequest = ServletRequestUtils.getStringParameter(request.getRequest(), PARAMNAME_ON_VALIDATE);
-            if (StringUtils.isBlank(codeInRequest)) {
-                throw new ValidateCaptchaException("验证码的值不能为空");
-            } else if (!StringUtils.equals(captcha.getCode(), codeInRequest)) {
-                throw new ValidateCaptchaException("输入的验证码不正确");
-            }
-        } catch (ServletRequestBindingException e) {
-            throw new ValidateCaptchaException("获取验证码的值失败", e);
+        String codeInRequest = request.getRequest().getParameter(PARAMNAME_ON_VALIDATE);
+        if (StringUtils.isBlank(codeInRequest)) {
+            throw new ValidateCaptchaException("验证码的值不能为空");
+        } else if (!StringUtils.equals(captcha.getCode(), codeInRequest)) {
+            throw new ValidateCaptchaException("输入的验证码不正确");
         }
     }
 }

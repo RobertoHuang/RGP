@@ -10,6 +10,7 @@
  */
 package roberto.growth.process.security.browser.authentication.mobile;
 
+import lombok.Setter;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -26,6 +27,7 @@ import org.springframework.util.ObjectUtils;
  * @create 2018-04-03
  * @since 1.0.0
  */
+@Setter
 public class SMSCaptchaAuthenticationProvider implements AuthenticationProvider {
     private UserDetailsService userDetailsService;
 

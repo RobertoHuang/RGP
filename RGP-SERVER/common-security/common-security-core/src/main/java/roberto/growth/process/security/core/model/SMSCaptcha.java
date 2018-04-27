@@ -24,13 +24,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SMSCaptcha extends BaseCaptcha {
-    /**
-     * 验证码
-     **/
+    /** 验证码 **/
     private String code;
 
-    public SMSCaptcha(String code, int expireIn) {
+    /** 手机号码 **/
+    private String mobile;
+
+    public SMSCaptcha(String mobile, String code, int expireIn) {
         super(expireIn);
         this.code = code;
+        this.mobile = mobile;
     }
 }

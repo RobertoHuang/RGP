@@ -15,24 +15,23 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈安全认证相关配置属性〉
  *
  * @author HuangTaiHong
- * @create 2018-02-22 
+ * @create 2018-02-22
  * @since 1.0.0
  */
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "roberto.growth.process.security")
 public class CustomerSecurityProperties {
-    /**
-     * 浏览器配置属性
-     **/
+    /** 浏览器配置属性 **/
     private BrowserProperties browser = new BrowserProperties();
 
-    /**
-     * 验证码配置属性
-     **/
+    /** 验证码配置属性 **/
     private CaptchaProperties captcha = new CaptchaProperties();
+
+    /** 用户中心配置属性 **/
+    private UserCenterProperties uc = new UserCenterProperties();
 }

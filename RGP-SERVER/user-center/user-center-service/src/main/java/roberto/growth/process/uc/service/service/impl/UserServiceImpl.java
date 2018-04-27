@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    @Cacheable(value = "USER_",key = "#user.id")
+    @Cacheable(value = "USER_", key = "#user.id")
     public User saveUser(User user) {
         return userRepository.save(user);
     }
@@ -56,7 +56,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "USER_",key = "#userId")
+    public User getUserByPhoneNumber(String phoneNumber) throws RGPUserCenterException {
+        User user = userRepository.findUserByPhoneNumber(phoneNumber);
+        if (ObjectUtils.isNotEmpty(user)) {
+            return user;
+        } else {
+            throw new RGPUserCenterException(RGPUserCenterExceptionCodeEnum.PHONE_NUMBER_UNBOUND_ACCOUNT);
+        }
+    }
+
+    @Override
+    @Cacheable(value = "USER_", key = "#userId")
     public User getUserInfo(String userId) {
         return userRepository.getOne(userId);
     }

@@ -27,10 +27,20 @@ public interface UserRepository extends JpaRepository<User, String> {
      * 〈通过用户名查找用户信息〉
      *
      * @param username
-     * @return:roberto.growth.process.uc.service.entity.User
-     * @since: 1.0.0
-     * @Author:HuangTaiHong
-     * @Date: 2018/4/18 下午 1:58
+     * @return roberto.growth.process.uc.service.entity.User
+     * @author HuangTaiHong
+     * @date 2018.04.26 14:43:33
      */
     User findUserByUsername(String username);
+
+    /**
+     * 功能描述: <br>
+     * 〈通过手机号码查找用户〉
+     *
+     * @param phoneNumber
+     * @return roberto.growth.process.uc.service.entity.User
+     * @author HuangTaiHong
+     * @date 2018.04.26 14:43:07
+     */
+    User findUserByPhoneNumber(String phoneNumber);
 }

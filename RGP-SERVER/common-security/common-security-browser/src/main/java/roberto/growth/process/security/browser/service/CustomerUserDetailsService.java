@@ -10,6 +10,7 @@
  */
 package roberto.growth.process.security.browser.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -30,7 +29,7 @@ import javax.annotation.Resource;
  */
 @Component
 public class CustomerUserDetailsService implements UserDetailsService {
-    @Resource
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override

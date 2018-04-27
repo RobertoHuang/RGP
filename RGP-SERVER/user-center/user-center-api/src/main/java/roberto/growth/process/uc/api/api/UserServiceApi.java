@@ -10,10 +10,13 @@
  */
 package roberto.growth.process.uc.api.api;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import roberto.growth.process.uc.api.exception.RGPUserCenterException;
+import roberto.growth.process.uc.api.vo.request.GetUserByPhoneNumberRequest;
 import roberto.growth.process.uc.api.vo.request.SaveUserRequest;
 import roberto.growth.process.uc.api.vo.request.ValidateUserRequest;
+import roberto.growth.process.uc.api.vo.response.GetUserByPhoneNumberResponse;
 import roberto.growth.process.uc.api.vo.response.SaveUserResponse;
 import roberto.growth.process.uc.api.vo.response.ValidateUserResponse;
 
@@ -44,11 +47,24 @@ public interface UserServiceApi {
      * 〈校验用户信息〉
      *
      * @param validateUserRequest
-     * @return:roberto.growth.process.uc.api.vo.response.ValidateUserResponse
-     * @since: 1.0.0
-     * @Author:HuangTaiHong
-     * @Date: 2018/4/18 上午 11:53
+     * @return roberto.growth.process.uc.api.vo.response.ValidateUserResponse
+     * @throws RGPUserCenterException
+     * @author HuangTaiHong
+     * @date 2018.04.26 14:31:44
      */
     @PostMapping(value = "/user/validate")
     ValidateUserResponse validateUser(ValidateUserRequest validateUserRequest) throws RGPUserCenterException;
+
+    /**
+     * 功能描述: <br>
+     * 〈通过手机号码查找用户信息〉
+     *
+     * @param getUserByPhoneNumberRequest
+     * @return roberto.growth.process.uc.api.vo.response.GetUserByPhoneNumberResponse
+     * @throws RGPUserCenterException
+     * @author HuangTaiHong
+     * @date 2018.04.26 14:40:47
+     */
+    @GetMapping(value = "/user/getByPhoneNumber")
+    GetUserByPhoneNumberResponse getUserByPhoneNumber(GetUserByPhoneNumberRequest getUserByPhoneNumberRequest) throws RGPUserCenterException;
 }

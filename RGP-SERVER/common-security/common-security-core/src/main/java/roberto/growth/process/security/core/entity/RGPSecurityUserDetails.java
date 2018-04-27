@@ -34,12 +34,12 @@ public class RGPSecurityUserDetails extends BaseEntity implements UserDetails{
     /**
      * 邮箱地址
      **/
-    private String email;
+    private String emailAddress;
 
     /**
      * 手机号码
      **/
-    private String mobile;
+    private String phoneNumber;
 
     /**
      * 账户密码
@@ -83,7 +83,7 @@ public class RGPSecurityUserDetails extends BaseEntity implements UserDetails{
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.emailAddress;
     }
 
     @Override

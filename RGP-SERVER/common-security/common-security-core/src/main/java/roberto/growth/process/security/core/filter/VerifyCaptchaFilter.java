@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 import roberto.growth.process.security.core.adapt.CaptchaStrategyAdapt;
 import roberto.growth.process.security.core.enums.RGPCaptchaGenerateTypeEnum;
@@ -55,9 +54,7 @@ public class VerifyCaptchaFilter extends OncePerRequestFilter implements Initial
     @Resource(name = "customerAuthenticationFailureHandler")
     private AuthenticationFailureHandler authenticationFailureHandler;
 
-    /**
-     * 需要验证码的请求
-     **/
+    /** 需要验证码的请求 **/
     private Map<String, RGPCaptchaGenerateTypeEnum> needCaptchaRequestMap = new HashMap<>();
 
     @Override
@@ -65,7 +62,7 @@ public class VerifyCaptchaFilter extends OncePerRequestFilter implements Initial
         CaptchaStrategy captchaStrategy = getCaptchaStrategy(request);
         if (!ObjectUtils.isEmpty(captchaStrategy)) {
             try {
-                captchaStrategy.validateCaptcha(new ServletWebRequest(request, response));
+               // captchaStrategy.validateCaptcha(new ServletWebRequest(request, response));
             } catch (ValidateCaptchaException e) {
                 authenticationFailureHandler.onAuthenticationFailure(request, response, e);
                 return;
@@ -79,14 +76,13 @@ public class VerifyCaptchaFilter extends OncePerRequestFilter implements Initial
      * 〈获取验证码生成策略〉
      *
      * @param request
-     * @return:roberto.growth.process.security.core.strategy.CaptchaStrategy
-     * @since: 1.0.0
-     * @Author:HuangTaiHong
-     * @Date: 2018/4/2 下午 2:41
+     * @return roberto.growth.process.security.core.strategy.CaptchaStrategy
+     * @author HuangTaiHong
+     * @date 2018.04.26 11:30:07
      */
     private CaptchaStrategy getCaptchaStrategy(HttpServletRequest request) {
         // GET请求不需要验证码
-         if (!StringUtils.equalsIgnoreCase(RequestMethod.GET.name(), request.getMethod())) {
+        if (!StringUtils.equalsIgnoreCase(RequestMethod.GET.name(), request.getMethod())) {
             Set<String> needCaptchaURLSet = needCaptchaRequestMap.keySet();
             for (String needCaptchaURL : needCaptchaURLSet) {
                 if (new AntPathMatcher().match(needCaptchaURL, request.getRequestURI())) {
@@ -101,12 +97,20 @@ public class VerifyCaptchaFilter extends OncePerRequestFilter implements Initial
     @Override
     public void afterPropertiesSet() throws ServletException {
         super.afterPropertiesSet();
-        // 登录处理页
-        needCaptchaRequestMap.put(customerSecurityProperties.getBrowser().getLoginProcessingUrl(), RGPCaptchaGenerateTypeEnum.IMG);
-        // 用户自定义配置需要验证码的URL
-        String imgFilterURL = customerSecurityProperties.getCaptcha().getIMGCaptcha().getFilterURL();
-        if (!ObjectUtils.isEmpty(imgFilterURL)) {
-            needCaptchaRequestMap.put(imgFilterURL, RGPCaptchaGenerateTypeEnum.IMG);
+        // 用户名密码登录
+        needCaptchaRequestMap.put(customerSecurityProperties.getBrowser().getFormLoginProcessUrl(), RGPCaptchaGenerateTypeEnum.IMG);
+        // 用户自定义配置需要图形验证码的URL
+        String imgFilterUrl = customerSecurityProperties.getCaptcha().getImg().getFilterURL();
+        if (!ObjectUtils.isEmpty(imgFilterUrl)) {
+            needCaptchaRequestMap.put(imgFilterUrl, RGPCaptchaGenerateTypeEnum.IMG);
+        }
+
+        // 短信验证码登录
+        needCaptchaRequestMap.put(customerSecurityProperties.getBrowser().getMobileLoginProcessUrl(), RGPCaptchaGenerateTypeEnum.SMS);
+        // 用户自定义配置需要短信验证码的URL
+        String smsFilterUrl = customerSecurityProperties.getCaptcha().getSms().getFilterURL();
+        if (!ObjectUtils.isEmpty(smsFilterUrl)) {
+            needCaptchaRequestMap.put(smsFilterUrl, RGPCaptchaGenerateTypeEnum.SMS);
         }
     }
 }

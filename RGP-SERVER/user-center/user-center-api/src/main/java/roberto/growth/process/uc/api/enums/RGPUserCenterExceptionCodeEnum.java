@@ -22,7 +22,8 @@ import lombok.Getter;
  */
 @Getter
 public enum RGPUserCenterExceptionCodeEnum {
-    USERNAME_NOT_FOUNT("E00001", "用户名不存在"), USERNAME_PASSWORD_NOT_MATCH("E00002", "用户名与密码不匹配");
+    USERNAME_NOT_FOUNT("E00001", "用户名不存在"), USERNAME_PASSWORD_NOT_MATCH("E00002", "用户名与密码不匹配"),
+    PHONE_NUMBER_UNBOUND_ACCOUNT("E00003","该手机号码未绑定任何账户");
 
     private final String code;
     private final String value;
