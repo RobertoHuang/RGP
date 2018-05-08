@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.social.security.SpringSocialConfigurer;
 import roberto.growth.process.common.utils.DatabaseUtils;
 import roberto.growth.process.security.browser.authentication.mobile.SMSCaptchaAuthenticationConfig;
 import roberto.growth.process.security.browser.service.CustomerUserDetailsService;
@@ -59,6 +60,9 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private SMSCaptchaAuthenticationConfig smsCaptchaAuthenticationConfig;
 
+    @Autowired
+    private SpringSocialConfigurer springSocialConfigurer;
+
     @Resource(name = "customerAuthenticationSuccessHandler")
     private AuthenticationSuccessHandler customerAuthenticationSuccessHandler;
 
@@ -69,9 +73,11 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.apply(smsCaptchaAuthenticationConfig)
                 .and()
+            .apply(springSocialConfigurer)
+                .and()
             .formLogin()
                 // 配置登录页
-                .loginPage(customerSecurityProperties.getBrowser().getLoginPage())
+                .loginPage(customerSecurityProperties.getBrowser().getSignInPage())
                 // 配置登录成功处理
                 .successHandler(customerAuthenticationSuccessHandler)
                 // 配置登录失败处理
@@ -82,7 +88,7 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         SecurityConstants.STATIC_RESOURCE,
                         SecurityConstants.GENERATE_CAPTCHA_URL_NOT_INTERCEPT,
-                        customerSecurityProperties.getBrowser().getLoginPage(),
+                        customerSecurityProperties.getBrowser().getSignInPage(),
                         customerSecurityProperties.getBrowser().getFormLoginProcessUrl(),
                         customerSecurityProperties.getBrowser().getMobileLoginProcessUrl()).permitAll()
                 .anyRequest().authenticated().and()

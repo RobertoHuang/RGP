@@ -25,7 +25,10 @@ import lombok.Setter;
 @Setter
 public class BrowserProperties {
     /** 登录页面地址 **/
-    private String loginPage = "/authentication/toLogin";
+    private String signInPage = "/authentication/toLogin";
+
+    /** 注册页面地址 **/
+    private String signUpPage = "/authentication/toRegister";
 
     /** 用户名密码登录处理请求地址 **/
     private String formLoginProcessUrl = "/authentication/form";

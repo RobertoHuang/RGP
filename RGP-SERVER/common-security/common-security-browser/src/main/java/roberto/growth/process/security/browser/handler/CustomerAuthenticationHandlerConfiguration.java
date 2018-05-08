@@ -33,7 +33,7 @@ public class CustomerAuthenticationHandlerConfiguration {
     @Bean(name = "customerAuthenticationFailureHandler")
     public AuthenticationFailureHandler authenticationFailureHandler() {
         CustomerAuthenticationFailureHandler customerAuthenticationFailureHandler = new CustomerAuthenticationFailureHandler();
-        customerAuthenticationFailureHandler.setDefaultFailureUrl(customerSecurityProperties.getBrowser().getLoginPage() + "?error=true");
+        customerAuthenticationFailureHandler.setDefaultFailureUrl(customerSecurityProperties.getBrowser().getSignInPage() + "?error=true");
         return customerAuthenticationFailureHandler;
     }
 

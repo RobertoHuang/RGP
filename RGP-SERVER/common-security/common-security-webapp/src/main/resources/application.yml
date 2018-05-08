@@ -13,4 +13,16 @@ security:
   basic:
     enabled: false
 
+roberto:
+  growth:
+    process:
+      security:
+        social:
+          qq:
+            appId: 101406228
+            appSecret: 762c332bf40517d432db41e17fb169c1
+            providerId: qq
+          filterProcessesUrl: /login
 
+logging:
+  config: classpath:logback.xml
