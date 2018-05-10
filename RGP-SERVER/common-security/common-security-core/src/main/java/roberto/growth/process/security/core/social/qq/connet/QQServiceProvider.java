@@ -12,7 +12,7 @@ package roberto.growth.process.security.core.social.qq.connet;
 
 import org.springframework.social.oauth2.AbstractOAuth2ServiceProvider;
 import roberto.growth.process.security.core.social.qq.api.QQ;
-import roberto.growth.process.security.core.social.qq.api.impl.QQImpl;
+import roberto.growth.process.security.core.social.qq.api.QQImpl;
 
 /**
  * 〈一句话功能简述〉<br>

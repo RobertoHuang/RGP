@@ -8,14 +8,12 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.security.core.social.qq.api.impl;
+package roberto.growth.process.security.core.social.qq.api;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 import org.springframework.social.oauth2.TokenStrategy;
-import roberto.growth.process.security.core.social.qq.api.QQ;
-import roberto.growth.process.security.core.social.qq.api.QQUserInfo;
 
 /**
  * 〈一句话功能简述〉<br>
