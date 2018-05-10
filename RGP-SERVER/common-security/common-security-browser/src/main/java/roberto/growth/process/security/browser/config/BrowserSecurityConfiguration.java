@@ -73,9 +73,9 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.apply(smsCaptchaAuthenticationConfig)
                 .and()
-            .apply(springSocialConfigurer)
+                .apply(springSocialConfigurer)
                 .and()
-            .formLogin()
+                .formLogin()
                 // 配置登录页
                 .loginPage(customerSecurityProperties.getBrowser().getSignInPage())
                 // 配置登录成功处理
@@ -84,7 +84,7 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .failureHandler(customerAuthenticationFailureHandler)
                 // 配置登录处理请求
                 .loginProcessingUrl(customerSecurityProperties.getBrowser().getFormLoginProcessUrl()).and()
-            .authorizeRequests()
+                .authorizeRequests()
                 .antMatchers(
                         SecurityConstants.STATIC_RESOURCE,
                         SecurityConstants.GENERATE_CAPTCHA_URL_NOT_INTERCEPT,
@@ -92,12 +92,12 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
                         customerSecurityProperties.getBrowser().getFormLoginProcessUrl(),
                         customerSecurityProperties.getBrowser().getMobileLoginProcessUrl()).permitAll()
                 .anyRequest().authenticated().and()
-            .rememberMe()
+                .rememberMe()
                 .userDetailsService(customerUserDetailsService)
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(customerSecurityProperties.getBrowser().getRememberMeSeconds()).and()
-            .addFilterBefore(verifyCaptchaFilter, AbstractPreAuthenticatedProcessingFilter.class)
-            .csrf().disable();
+                .addFilterBefore(verifyCaptchaFilter, AbstractPreAuthenticatedProcessingFilter.class)
+                .csrf().disable();
     }
 
     @Bean
