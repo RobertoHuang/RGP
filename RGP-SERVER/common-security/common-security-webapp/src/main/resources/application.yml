@@ -19,6 +19,7 @@ roberto:
       security:
         social:
           qq:
+            # 对应回调域:www.zzz.cn/login/qq
             appId: 101406228
             appSecret: 762c332bf40517d432db41e17fb169c1
             providerId: qq
