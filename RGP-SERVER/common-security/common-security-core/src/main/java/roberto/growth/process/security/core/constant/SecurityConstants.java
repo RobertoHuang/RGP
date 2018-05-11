@@ -39,4 +39,7 @@ public class SecurityConstants {
 
     /** 验证码SESSION KEY的前缀 **/
     public static final String CAPTCHA_SESSION_KEY_PREFIX = "CAPTCHA_SESSION_KEY_";
+
+    /** Session失效默认的跳转地址 **/
+    public static final String DEFAULT_SESSION_INVALID_URL = "/session/invalid";
 }

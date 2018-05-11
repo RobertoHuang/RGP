@@ -11,6 +11,7 @@
 package roberto.growth.process.security.browser.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,10 +24,14 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
 import roberto.growth.process.common.utils.DatabaseUtils;
 import roberto.growth.process.security.browser.authentication.mobile.SMSCaptchaAuthenticationConfig;
 import roberto.growth.process.security.browser.service.CustomerUserDetailsService;
+import roberto.growth.process.security.browser.session.RGPExpiredSessionStrategy;
+import roberto.growth.process.security.browser.session.RGPInvalidSessionStrategy;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 
@@ -61,6 +66,12 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private SMSCaptchaAuthenticationConfig smsCaptchaAuthenticationConfig;
 
     @Autowired
+    private InvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
+    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
+
+    @Autowired
     private SpringSocialConfigurer springSocialConfigurer;
 
     @Resource(name = "customerAuthenticationSuccessHandler")
@@ -73,9 +84,9 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.apply(smsCaptchaAuthenticationConfig)
                 .and()
-                .apply(springSocialConfigurer)
+            .apply(springSocialConfigurer)
                 .and()
-                .formLogin()
+            .formLogin()
                 // 配置登录页
                 .loginPage(customerSecurityProperties.getBrowser().getSignInPage())
                 // 配置登录成功处理
@@ -84,20 +95,25 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .failureHandler(customerAuthenticationFailureHandler)
                 // 配置登录处理请求
                 .loginProcessingUrl(customerSecurityProperties.getBrowser().getFormLoginProcessUrl()).and()
-                .authorizeRequests()
+            .authorizeRequests()
                 .antMatchers(
-                        SecurityConstants.STATIC_RESOURCE,
-                        SecurityConstants.GENERATE_CAPTCHA_URL_NOT_INTERCEPT,
-                        customerSecurityProperties.getBrowser().getSignInPage(),
-                        customerSecurityProperties.getBrowser().getFormLoginProcessUrl(),
-                        customerSecurityProperties.getBrowser().getMobileLoginProcessUrl()).permitAll()
+                    SecurityConstants.STATIC_RESOURCE,
+                    SecurityConstants.GENERATE_CAPTCHA_URL_NOT_INTERCEPT,
+                    customerSecurityProperties.getBrowser().getSignInPage(),
+                    customerSecurityProperties.getBrowser().getFormLoginProcessUrl(),
+                    customerSecurityProperties.getBrowser().getMobileLoginProcessUrl()).permitAll()
                 .anyRequest().authenticated().and()
-                .rememberMe()
+            .rememberMe()
                 .userDetailsService(customerUserDetailsService)
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(customerSecurityProperties.getBrowser().getRememberMeSeconds()).and()
-                .addFilterBefore(verifyCaptchaFilter, AbstractPreAuthenticatedProcessingFilter.class)
-                .csrf().disable();
+            .sessionManagement()
+                .invalidSessionStrategy(invalidSessionStrategy)
+                .maximumSessions(customerSecurityProperties.getBrowser().getSession().getMaximumSessions())
+                .maxSessionsPreventsLogin(customerSecurityProperties.getBrowser().getSession().isMaxSessionsPreventsLogin())
+                .expiredSessionStrategy(sessionInformationExpiredStrategy).and().and()
+            .addFilterBefore(verifyCaptchaFilter, AbstractPreAuthenticatedProcessingFilter.class)
+            .csrf().disable();
     }
 
     @Bean
@@ -115,5 +131,17 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
             tokenRepository.setCreateTableOnStartup(true);
         }
         return tokenRepository;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(InvalidSessionStrategy.class)
+    public InvalidSessionStrategy invalidSessionStrategy(){
+        return new RGPInvalidSessionStrategy(customerSecurityProperties.getBrowser().getSession().getSessionInvalidUrl());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SessionInformationExpiredStrategy.class)
+    public SessionInformationExpiredStrategy sessionInformationExpiredStrategy(){
+        return new RGPExpiredSessionStrategy(customerSecurityProperties.getBrowser().getSession().getSessionInvalidUrl());
     }
 }

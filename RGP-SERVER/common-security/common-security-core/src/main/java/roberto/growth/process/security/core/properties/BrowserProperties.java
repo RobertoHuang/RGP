@@ -38,4 +38,7 @@ public class BrowserProperties {
 
     /** Rememberme有效时间(默认为一周) **/
     private Integer rememberMeSeconds = 604800;
+
+    /** Spring Session相关配置 **/
+    private SessionProperties session = new SessionProperties();
 }
