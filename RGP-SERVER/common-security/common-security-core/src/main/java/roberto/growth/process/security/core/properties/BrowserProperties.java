@@ -30,6 +30,12 @@ public class BrowserProperties {
     /** 注册页面地址 **/
     private String signUpPage = "/authentication/toRegister";
 
+    /** 退出登录地址 **/
+    private String logoutUrl = "/logout";
+
+    /** 退出登录成功跳转地址 **/
+    private String logoutSuccessPage = "/authentication/toSignOut";
+
     /** 用户名密码登录处理请求地址 **/
     private String formLoginProcessUrl = "/authentication/form";
 

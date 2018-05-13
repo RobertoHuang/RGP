@@ -11,6 +11,7 @@
 package roberto.growth.process.security.core.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -23,16 +24,15 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class SMSCaptcha extends BaseCaptcha {
-    /** 验证码 **/
-    private String code;
+    private static final long serialVersionUID = 2912815078709956861L;
 
     /** 手机号码 **/
     private String mobile;
 
     public SMSCaptcha(String mobile, String code, int expireIn) {
-        super(expireIn);
-        this.code = code;
+        super(code, expireIn);
         this.mobile = mobile;
     }
 }

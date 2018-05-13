@@ -33,7 +33,7 @@ import java.util.Collection;
  * @since 1.0.0
  */
 @Component
-public class CustomerUserDetailsService implements UserDetailsService,SocialUserDetailsService {
+public class CustomerUserDetailsService implements UserDetailsService, SocialUserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 

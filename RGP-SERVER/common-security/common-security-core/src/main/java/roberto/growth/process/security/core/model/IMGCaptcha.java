@@ -11,6 +11,7 @@
 package roberto.growth.process.security.core.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.awt.image.BufferedImage;
@@ -25,20 +26,15 @@ import java.awt.image.BufferedImage;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class IMGCaptcha extends BaseCaptcha {
-    /**
-     * 验证码
-     **/
-    private String code;
+    private static final long serialVersionUID = -114302703330524977L;
 
-    /**
-     * 验证码图片
-     **/
+    /** 验证码图片 **/
     private BufferedImage image;
 
     public IMGCaptcha(String code, BufferedImage image, int expireIn) {
-        super(expireIn);
-        this.code = code;
+        super(code, expireIn);
         this.image = image;
     }
 }

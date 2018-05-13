@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 import roberto.growth.process.security.core.adapt.CaptchaStrategyAdapt;
 import roberto.growth.process.security.core.enums.RGPCaptchaGenerateTypeEnum;
@@ -62,7 +63,7 @@ public class VerifyCaptchaFilter extends OncePerRequestFilter implements Initial
         CaptchaStrategy captchaStrategy = getCaptchaStrategy(request);
         if (!ObjectUtils.isEmpty(captchaStrategy)) {
             try {
-               // captchaStrategy.validateCaptcha(new ServletWebRequest(request, response));
+                captchaStrategy.validateCaptcha(new ServletWebRequest(request, response));
             } catch (ValidateCaptchaException e) {
                 authenticationFailureHandler.onAuthenticationFailure(request, response, e);
                 return;

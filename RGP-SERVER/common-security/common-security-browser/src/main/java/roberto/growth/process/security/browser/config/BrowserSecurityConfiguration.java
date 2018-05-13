@@ -11,7 +11,6 @@
 package roberto.growth.process.security.browser.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
@@ -30,8 +30,6 @@ import org.springframework.social.security.SpringSocialConfigurer;
 import roberto.growth.process.common.utils.DatabaseUtils;
 import roberto.growth.process.security.browser.authentication.mobile.SMSCaptchaAuthenticationConfig;
 import roberto.growth.process.security.browser.service.CustomerUserDetailsService;
-import roberto.growth.process.security.browser.session.RGPExpiredSessionStrategy;
-import roberto.growth.process.security.browser.session.RGPInvalidSessionStrategy;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 
@@ -66,12 +64,6 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private SMSCaptchaAuthenticationConfig smsCaptchaAuthenticationConfig;
 
     @Autowired
-    private InvalidSessionStrategy invalidSessionStrategy;
-
-    @Autowired
-    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
-
-    @Autowired
     private SpringSocialConfigurer springSocialConfigurer;
 
     @Resource(name = "customerAuthenticationSuccessHandler")
@@ -79,6 +71,15 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Resource(name = "customerAuthenticationFailureHandler")
     private AuthenticationFailureHandler customerAuthenticationFailureHandler;
+
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private InvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
+    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -103,15 +104,19 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     customerSecurityProperties.getBrowser().getFormLoginProcessUrl(),
                     customerSecurityProperties.getBrowser().getMobileLoginProcessUrl()).permitAll()
                 .anyRequest().authenticated().and()
-            .rememberMe()
-                .userDetailsService(customerUserDetailsService)
-                .tokenRepository(persistentTokenRepository())
-                .tokenValiditySeconds(customerSecurityProperties.getBrowser().getRememberMeSeconds()).and()
             .sessionManagement()
                 .invalidSessionStrategy(invalidSessionStrategy)
                 .maximumSessions(customerSecurityProperties.getBrowser().getSession().getMaximumSessions())
                 .maxSessionsPreventsLogin(customerSecurityProperties.getBrowser().getSession().isMaxSessionsPreventsLogin())
                 .expiredSessionStrategy(sessionInformationExpiredStrategy).and().and()
+            .logout()
+                .logoutUrl(customerSecurityProperties.getBrowser().getLogoutUrl())
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .deleteCookies("JSESSIONID").and()
+            .rememberMe()
+                .userDetailsService(customerUserDetailsService)
+                .tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(customerSecurityProperties.getBrowser().getRememberMeSeconds()).and()
             .addFilterBefore(verifyCaptchaFilter, AbstractPreAuthenticatedProcessingFilter.class)
             .csrf().disable();
     }
@@ -131,17 +136,5 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
             tokenRepository.setCreateTableOnStartup(true);
         }
         return tokenRepository;
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(InvalidSessionStrategy.class)
-    public InvalidSessionStrategy invalidSessionStrategy(){
-        return new RGPInvalidSessionStrategy(customerSecurityProperties.getBrowser().getSession().getSessionInvalidUrl());
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(SessionInformationExpiredStrategy.class)
-    public SessionInformationExpiredStrategy sessionInformationExpiredStrategy(){
-        return new RGPExpiredSessionStrategy(customerSecurityProperties.getBrowser().getSession().getSessionInvalidUrl());
     }
 }

@@ -6,6 +6,7 @@ spring:
     url: jdbc:mysql://192.168.56.128:3306/RGP-UC?useUnicode=yes&characterEncoding=UTF-8&useSSL=false
   session:
     store-type: none
+  
   mvc:
     throw-exception-if-no-handler-found: false
 
@@ -31,3 +32,9 @@ roberto:
 
 logging:
   config: classpath:logback.xml
+
+server:
+  servlet:
+    session:
+      timeout: 60
+

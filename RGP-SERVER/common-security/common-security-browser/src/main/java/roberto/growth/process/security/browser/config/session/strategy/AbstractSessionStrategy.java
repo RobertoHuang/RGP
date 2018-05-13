@@ -8,11 +8,11 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.security.browser.session;
+package roberto.growth.process.security.browser.config.session.strategy;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -25,11 +25,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈Session策略抽象类〉
  *
  * @author HuangTaiHong
- * @create 2018-05-11 
+ * @create 2018-05-11
  * @since 1.0.0
  */
 @Slf4j
@@ -37,13 +37,11 @@ public abstract class AbstractSessionStrategy {
     /** 跳转的URL **/
     private String destinationUrl;
 
-    /** 重定向策略 **/
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
     /** 跳转前是否创建新的session **/
     private boolean createNewSession = true;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    /** 重定向策略 使用默认重定向策略 **/
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     public AbstractSessionStrategy(String invalidSessionUrl) {
         Assert.isTrue(UrlUtils.isValidRedirectUrl(invalidSessionUrl), "url must start with '/' or with 'http(s)'");
@@ -54,23 +52,20 @@ public abstract class AbstractSessionStrategy {
         if (createNewSession) {
             request.getSession();
         }
-
-        String targetUrl;
-        String sourceUrl = request.getRequestURI();
-        if (StringUtils.endsWithIgnoreCase(sourceUrl, ".html")) {
-            targetUrl = destinationUrl+".html";
-            log.info("session失效,跳转到"+targetUrl);
-            redirectStrategy.sendRedirect(request, response, targetUrl);
-        }else{
+        String accept = request.getHeader("Accept");
+        if (!ContentType.APPLICATION_JSON.getMimeType().equals(accept)) {
+            log.info("session失效,跳转到" + destinationUrl);
+            redirectStrategy.sendRedirect(request, response, destinationUrl);
+        } else {
             String message = "session已失效";
-            if(isConcurrency()){
+            if (isConcurrency()) {
                 message = message + "，有可能是并发登录导致的";
             }
+
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(new SimpleResponse(message)));
+            response.getWriter().write(JSONObject.toJSONString(new SimpleResponse(message)));
         }
-
     }
 
     /** Session失效是否是并发导致的 **/
