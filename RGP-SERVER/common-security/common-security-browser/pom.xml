@@ -19,13 +19,6 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- MySQL Start -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <!-- MySQL End -->
-
         <!-- Spring-Session BNG -->
         <dependency>
             <groupId>org.springframework.session</groupId>

@@ -46,7 +46,6 @@ import javax.sql.DataSource;
  * @since 1.0.0
  */
 @Configuration
-@EnableConfigurationProperties(CustomerSecurityProperties.class)
 public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource(name = "verifyCaptchaFilter")
     private Filter verifyCaptchaFilter;
@@ -119,12 +118,6 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(customerSecurityProperties.getBrowser().getRememberMeSeconds()).and()
             .addFilterBefore(verifyCaptchaFilter, AbstractPreAuthenticatedProcessingFilter.class)
             .csrf().disable();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // 配置密码加密算法
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
