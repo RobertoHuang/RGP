@@ -1,14 +1,14 @@
 /**
  * Copyright (C), 2015-2018, ND Co., Ltd.
- * FileName: RGPSpringSocialAutoConfiguration
+ * FileName: SpringSocialConfiguration
  * Author:   HuangTaiHong
- * Date:     2018/5/10 23:37
- * Description: SpringSocial基础配置
+ * Date:     2018/5/14 22:19
+ * Description: SpringSocial安全配置
  * History:
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.security.core.social;
+package roberto.growth.process.security.core.config.social;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,19 +26,20 @@ import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.security.SpringSocialConfigurer;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
+import roberto.growth.process.security.core.social.CustomerSpringSocialConfiguration;
 
 import javax.sql.DataSource;
 
 /**
  * 〈一句话功能简述〉<br> 
- * 〈SpringSocial基础配置〉
+ * 〈SpringSocial安全配置〉
  *
  * @author HuangTaiHong
- * @create 2018/5/10
+ * @create 2018/5/14
  * @since 1.0.0
  */
 @Configuration
-public class RGPSpringSocialAutoConfiguration extends SocialConfigurerAdapter {
+public class SpringSocialConfiguration extends SocialConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 

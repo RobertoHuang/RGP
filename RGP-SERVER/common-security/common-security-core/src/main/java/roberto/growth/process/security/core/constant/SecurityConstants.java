@@ -42,4 +42,6 @@ public class SecurityConstants {
 
     /** Session失效默认的跳转地址 **/
     public static final String DEFAULT_SESSION_INVALID_URL = "/session/invalid";
+
+
 }

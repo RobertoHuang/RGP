@@ -2,13 +2,13 @@
  * Copyright (C), 2015-2018, ND Co., Ltd.
  * FileName: SMSCaptchaAuthenticationToken
  * Author:   HuangTaiHong
- * Date:     2018-04-03 下午 5:31
+ * Date:     2018/5/14 22:08
  * Description: 短信验证码凭证
  * History:
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.security.browser.authentication.mobile;
+package roberto.growth.process.security.core.config.captcha.sms.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,11 +17,11 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import java.util.Collection;
 
 /**
- * 〈一句话功能简述〉<br>
+ * 〈一句话功能简述〉<br> 
  * 〈短信验证码凭证〉
  *
  * @author HuangTaiHong
- * @create 2018-04-03
+ * @create 2018/5/14
  * @since 1.0.0
  */
 public class SMSCaptchaAuthenticationToken extends AbstractAuthenticationToken {

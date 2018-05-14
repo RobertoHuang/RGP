@@ -1,6 +1,6 @@
 /**
  * Copyright (C), 2015-2018, ND Co., Ltd.
- * FileName: VerifyCaptchaFilter
+ * FileName: IMGCaptchaAuthenticationFilter
  * Author:   HuangTaiHong
  * Date:     2018-03-29 下午 5:17
  * Description: 校验验证码过滤器
@@ -26,7 +26,6 @@ import roberto.growth.process.security.core.exception.ValidateCaptchaException;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 import roberto.growth.process.security.core.strategy.CaptchaStrategy;
 
-import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,15 +43,15 @@ import java.util.Set;
  * @create 2018-03-29
  * @since 1.0.0
  */
-@Component("verifyCaptchaFilter")
-public class VerifyCaptchaFilter extends OncePerRequestFilter implements InitializingBean {
+@Component("imgCaptchaAuthenticationFilter")
+public class IMGCaptchaAuthenticationFilter extends OncePerRequestFilter implements InitializingBean {
     @Autowired
     private CaptchaStrategyAdapt captchaStrategyAdapt;
 
     @Autowired
     private CustomerSecurityProperties customerSecurityProperties;
 
-    @Resource(name = "customerAuthenticationFailureHandler")
+    @Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
 
     /** 需要验证码的请求 **/

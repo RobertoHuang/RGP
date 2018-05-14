@@ -8,7 +8,7 @@
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.security.app.config.handler;
+package roberto.growth.process.security.app.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.http.entity.ContentType;

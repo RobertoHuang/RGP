@@ -30,9 +30,6 @@ roberto:
             providerId: weixin
           filterProcessesUrl: /login
 
-logging:
-  config: classpath:logback.xml
-
 server:
   servlet:
     session:

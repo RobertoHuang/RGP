@@ -2,13 +2,13 @@
  * Copyright (C), 2015-2018, ND Co., Ltd.
  * FileName: SMSCaptchaAuthenticationUserDetailsService
  * Author:   HuangTaiHong
- * Date:     2018-04-26 下午 2:57
+ * Date:     2018/5/14 22:10
  * Description: 短信验证码用户相关Service层
  * History:
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.security.browser.authentication.mobile;
+package roberto.growth.process.security.core.config.captcha.sms.authentication;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.Setter;
@@ -22,11 +22,11 @@ import roberto.growth.process.security.core.entity.RGPSecurityUserDetails;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 
 /**
- * 〈一句话功能简述〉<br>
+ * 〈一句话功能简述〉<br> 
  * 〈短信验证码用户相关Service层〉
  *
  * @author HuangTaiHong
- * @create 2018-04-26
+ * @create 2018/5/14
  * @since 1.0.0
  */
 @Setter

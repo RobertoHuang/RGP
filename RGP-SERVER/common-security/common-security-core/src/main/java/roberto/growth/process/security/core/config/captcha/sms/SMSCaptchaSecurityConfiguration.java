@@ -1,16 +1,17 @@
 /**
  * Copyright (C), 2015-2018, ND Co., Ltd.
- * FileName: SMSCaptchaAuthenticationConfig
+ * FileName: SMSCaptchaSecurityConfiguration
  * Author:   HuangTaiHong
- * Date:     2018-04-26 下午 3:04
- * Description: 短信验证码校验配置
+ * Date:     2018/5/14 22:02
+ * Description: 短信验证码配置类
  * History:
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.security.browser.authentication.mobile;
+package roberto.growth.process.security.core.config.captcha.sms;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,44 +19,43 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
+import roberto.growth.process.security.core.config.captcha.sms.authentication.SMSCaptchaAuthenticationProvider;
+import roberto.growth.process.security.core.config.captcha.sms.authentication.SMSCaptchaAuthenticationUserDetailsService;
+import roberto.growth.process.security.core.filter.SMSCaptchaAuthenticationFilter;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 
-import javax.annotation.Resource;
-
 /**
- * 〈一句话功能简述〉<br>
- * 〈短信验证码校验配置〉
+ * 〈一句话功能简述〉<br> 
+ * 〈短信验证码配置类〉
  *
  * @author HuangTaiHong
- * @create 2018-04-26
+ * @create 2018/5/14
  * @since 1.0.0
  */
-@Component
-public class SMSCaptchaAuthenticationConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+@Configuration
+public class SMSCaptchaSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
     @Autowired
     private CustomerSecurityProperties customerSecurityProperties;
 
-    @Resource(name = "customerAuthenticationSuccessHandler")
-    private AuthenticationSuccessHandler customerAuthenticationSuccessHandler;
+    @Autowired
+    private AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    @Resource(name = "customerAuthenticationFailureHandler")
-    private AuthenticationFailureHandler customerAuthenticationFailureHandler;
+    @Autowired
+    private AuthenticationFailureHandler authenticationFailureHandler;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         String filterUrl = customerSecurityProperties.getBrowser().getMobileLoginProcessUrl();
         SMSCaptchaAuthenticationFilter smsCaptchaAuthenticationFilter = new SMSCaptchaAuthenticationFilter(filterUrl);
         smsCaptchaAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
-        smsCaptchaAuthenticationFilter.setAuthenticationSuccessHandler(customerAuthenticationSuccessHandler);
-        smsCaptchaAuthenticationFilter.setAuthenticationFailureHandler(customerAuthenticationFailureHandler);
+        smsCaptchaAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+        smsCaptchaAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler);
 
         SMSCaptchaAuthenticationProvider smsCaptchaAuthenticationProvider = new SMSCaptchaAuthenticationProvider();
         SMSCaptchaAuthenticationUserDetailsService smsCaptchaAuthenticationUserDetailsService = new SMSCaptchaAuthenticationUserDetailsService();
         smsCaptchaAuthenticationUserDetailsService.setCustomerSecurityProperties(customerSecurityProperties);
         smsCaptchaAuthenticationProvider.setUserDetailsService(smsCaptchaAuthenticationUserDetailsService);
 
-        http.authenticationProvider(smsCaptchaAuthenticationProvider)
-                .addFilterAfter(smsCaptchaAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.authenticationProvider(smsCaptchaAuthenticationProvider).addFilterAfter(smsCaptchaAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
