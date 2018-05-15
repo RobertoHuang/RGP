@@ -22,6 +22,8 @@ import roberto.growth.process.common.exception.enums.RGPBaseExceptionCodeEnum;
  * @since 1.0.0
  */
 public class RGPBaseRTException extends AbstractCommonRTException{
+    private static final long serialVersionUID = -8066439820378767125L;
+
     public RGPBaseRTException(String code, String message) {
         super(code, message);
     }

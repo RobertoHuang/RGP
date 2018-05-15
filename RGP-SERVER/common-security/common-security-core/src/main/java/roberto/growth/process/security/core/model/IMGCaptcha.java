@@ -10,9 +10,11 @@
  */
 package roberto.growth.process.security.core.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import roberto.growth.process.security.core.enums.RGPCaptchaGenerateTypeEnum;
 
 import java.awt.image.BufferedImage;
 
@@ -31,10 +33,11 @@ public class IMGCaptcha extends BaseCaptcha {
     private static final long serialVersionUID = -114302703330524977L;
 
     /** 验证码图片 **/
+    @JSONField(serialize = false,deserialize = false)
     private BufferedImage image;
 
     public IMGCaptcha(String code, BufferedImage image, int expireIn) {
-        super(code, expireIn);
+        super(code, expireIn, RGPCaptchaGenerateTypeEnum.IMG);
         this.image = image;
     }
 }

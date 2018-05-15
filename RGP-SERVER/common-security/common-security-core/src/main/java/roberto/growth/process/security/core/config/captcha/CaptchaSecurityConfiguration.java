@@ -3,12 +3,12 @@
  * FileName: CaptchaSecurityConfiguration
  * Author:   HuangTaiHong
  * Date:     2018/5/14 21:54
- * Description: 图形验证码安全配置
+ * Description: 验证码安全配置
  * History:
  * <author>          <time>          <version>          <desc>
  * 作者姓名           修改时间           版本号              描述
  */
-package roberto.growth.process.security.core.config.captcha.img;
+package roberto.growth.process.security.core.config.captcha;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
@@ -21,19 +21,19 @@ import javax.servlet.Filter;
 
 /**
  * 〈一句话功能简述〉<br>
- * 〈图形验证码安全配置〉
+ * 〈验证码安全配置〉
  *
  * @author HuangTaiHong
  * @create 2018/5/14
  * @since 1.0.0
  */
 @Configuration
-public class IMGCaptchaSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
-    @Resource(name = "imgCaptchaAuthenticationFilter")
-    private Filter imgCaptchaAuthenticationFilter;
+public class CaptchaSecurityConfiguration extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+    @Resource(name = "captchaAuthenticationFilter")
+    private Filter captchaAuthenticationFilter;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(imgCaptchaAuthenticationFilter, AbstractPreAuthenticatedProcessingFilter.class);
+        http.addFilterBefore(captchaAuthenticationFilter, AbstractPreAuthenticatedProcessingFilter.class);
     }
 }

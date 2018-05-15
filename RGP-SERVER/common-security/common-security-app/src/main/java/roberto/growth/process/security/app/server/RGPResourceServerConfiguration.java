@@ -15,11 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.social.security.SpringSocialConfigurer;
 import roberto.growth.process.security.app.config.form.FormAuthenticationConfiguration;
-import roberto.growth.process.security.core.config.captcha.img.IMGCaptchaSecurityConfiguration;
+import roberto.growth.process.security.core.config.captcha.CaptchaSecurityConfiguration;
 import roberto.growth.process.security.core.config.captcha.sms.SMSCaptchaSecurityConfiguration;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
@@ -50,7 +48,7 @@ public class RGPResourceServerConfiguration extends ResourceServerConfigurerAdap
 
     @Autowired
     /** 图形验证码配置 **/
-    private IMGCaptchaSecurityConfiguration imgCaptchaSecurityConfiguration;
+    private CaptchaSecurityConfiguration captchaSecurityConfiguration;
 
     @Autowired
     /** 短信验证码配置 **/
@@ -60,27 +58,15 @@ public class RGPResourceServerConfiguration extends ResourceServerConfigurerAdap
     /** 表单登陆相关配置 **/
     private FormAuthenticationConfiguration formAuthenticationConfiguration;
 
-    @Autowired
-    protected AuthenticationSuccessHandler authenticationSuccessHandler;
-
-    @Autowired
-    protected AuthenticationFailureHandler authenticationFailureHandler;
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
-//        formAuthenticationConfiguration.configure(http);
-        http
-//            .apply(imgCaptchaSecurityConfiguration)
-//                .and()
+        formAuthenticationConfiguration.configure(http);
+        http.apply(captchaSecurityConfiguration)
+                .and()
             .apply(smsCaptchaSecurityConfiguration)
                 .and()
             .apply(springSocialConfigurer)
                 .and()
-            .formLogin()
-                .loginPage(customerSecurityProperties.getBrowser().getSignInPage())
-                .loginProcessingUrl(customerSecurityProperties.getBrowser().getFormLoginProcessUrl())
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler).and()
             .authorizeRequests()
                 .antMatchers(
                         SecurityConstants.STATIC_RESOURCE,

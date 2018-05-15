@@ -24,7 +24,7 @@ import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
 import roberto.growth.process.common.utils.DatabaseUtils;
-import roberto.growth.process.security.core.config.captcha.img.IMGCaptchaSecurityConfiguration;
+import roberto.growth.process.security.core.config.captcha.CaptchaSecurityConfiguration;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 import roberto.growth.process.security.core.service.CustomerUserDetailsService;
@@ -46,8 +46,8 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    @Resource(name = "imgCaptchaAuthenticationFilter")
-    private Filter imgCaptchaAuthenticationFilter;
+    @Resource(name = "captchaAuthenticationFilter")
+    private Filter captchaAuthenticationFilter;
 
     @Autowired
     private CustomerUserDetailsService customerUserDetailsService;
@@ -77,7 +77,7 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
 
     @Autowired
-    private IMGCaptchaSecurityConfiguration captchaSecurityConfiguration;
+    private CaptchaSecurityConfiguration captchaSecurityConfiguration;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

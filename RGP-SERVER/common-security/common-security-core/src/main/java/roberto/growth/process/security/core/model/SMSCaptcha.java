@@ -13,6 +13,7 @@ package roberto.growth.process.security.core.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import roberto.growth.process.security.core.enums.RGPCaptchaGenerateTypeEnum;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -32,7 +33,7 @@ public class SMSCaptcha extends BaseCaptcha {
     private String mobile;
 
     public SMSCaptcha(String mobile, String code, int expireIn) {
-        super(code, expireIn);
+        super(code, expireIn, RGPCaptchaGenerateTypeEnum.SMS);
         this.mobile = mobile;
     }
 }

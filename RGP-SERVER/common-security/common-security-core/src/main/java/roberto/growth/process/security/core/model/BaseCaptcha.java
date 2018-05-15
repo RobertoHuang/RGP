@@ -13,6 +13,7 @@ package roberto.growth.process.security.core.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import roberto.growth.process.security.core.enums.RGPCaptchaGenerateTypeEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,7 +29,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BaseCaptcha implements Serializable{
+public class BaseCaptcha implements Serializable {
     private static final long serialVersionUID = -4342392387582118978L;
 
     /** 验证码 **/
@@ -37,16 +38,14 @@ public class BaseCaptcha implements Serializable{
     /** 验证码过期时间 **/
     private LocalDateTime expireTime;
 
+    /** 验证码类型 **/
+    private RGPCaptchaGenerateTypeEnum rgpCaptchaGenerateTypeEnum;
+
     /** expireIn 单位(s) **/
-    public BaseCaptcha(String code, int expireIn) {
+    public BaseCaptcha(String code, int expireIn, RGPCaptchaGenerateTypeEnum rgpCaptchaGenerateTypeEnum) {
         this.code = code;
         this.expireTime = LocalDateTime.now().plusSeconds(expireIn);
-    }
-
-    /** expireIn 过期时间 **/
-    public BaseCaptcha(String code, LocalDateTime expireIn) {
-        this.code = code;
-        this.expireTime = expireIn;
+        this.rgpCaptchaGenerateTypeEnum = rgpCaptchaGenerateTypeEnum;
     }
 
     /**

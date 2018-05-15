@@ -1,6 +1,6 @@
 /**
  * Copyright (C), 2015-2018, ND Co., Ltd.
- * FileName: IMGCaptchaAuthenticationFilter
+ * FileName: CaptchaAuthenticationFilter
  * Author:   HuangTaiHong
  * Date:     2018-03-29 下午 5:17
  * Description: 校验验证码过滤器
@@ -43,8 +43,8 @@ import java.util.Set;
  * @create 2018-03-29
  * @since 1.0.0
  */
-@Component("imgCaptchaAuthenticationFilter")
-public class IMGCaptchaAuthenticationFilter extends OncePerRequestFilter implements InitializingBean {
+@Component("captchaAuthenticationFilter")
+public class CaptchaAuthenticationFilter extends OncePerRequestFilter implements InitializingBean {
     @Autowired
     private CaptchaStrategyAdapt captchaStrategyAdapt;
 

@@ -107,7 +107,12 @@ public class RedisConfiguration {
     @Bean
     @ConditionalOnBean(LettuceConnectionFactory.class)
     public ReactiveRedisTemplate reactiveRedisTemplate(LettuceConnectionFactory lettuceConnectionFactory) {
-        return new ReactiveRedisTemplate(lettuceConnectionFactory, RedisSerializationContext.string());
+        RedisSerializationContext redisSerializationContext = RedisSerializationContext.<String, Object>newSerializationContext()
+                .key(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .hashKey(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .value(RedisSerializationContext.SerializationPair.fromSerializer(new GenericFastJsonRedisSerializer()))
+                .hashValue(RedisSerializationContext.SerializationPair.fromSerializer(new GenericFastJsonRedisSerializer())).build();
+        return new ReactiveRedisTemplate(lettuceConnectionFactory, redisSerializationContext);
     }
 
     @Bean

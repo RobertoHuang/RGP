@@ -10,16 +10,15 @@
  */
 package roberto.growth.process.security.core.config.captcha.sms.authentication;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.Setter;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.client.RestTemplate;
-import roberto.growth.process.security.core.entity.RGPSecurityUserDetails;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
+
+import java.util.Collection;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -37,10 +36,48 @@ public class SMSCaptchaAuthenticationUserDetailsService implements UserDetailsSe
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        String url = customerSecurityProperties.getUc().getUrl() + "/user/getByPhoneNumber";
-        HttpEntity<JSONObject> request = new HttpEntity<>(new JSONObject());
-        JSONObject jsonObject = restTemplate.exchange(url, HttpMethod.GET, request, JSONObject.class, new Object()).getBody();
-        RGPSecurityUserDetails userDetails = jsonObject.getJSONObject("data").getJSONObject("userDetail").toJavaObject(RGPSecurityUserDetails.class);
-        return userDetails;
+//        String url = customerSecurityProperties.getUc().getUrl() + "/user/getByPhoneNumber";
+//        HttpEntity<JSONObject> request = new HttpEntity<>(new JSONObject());
+//        JSONObject jsonObject = restTemplate.exchange(url, HttpMethod.GET, request, JSONObject.class, new Object()).getBody();
+//        RGPSecurityUserDetails userDetails = jsonObject.getJSONObject("data").getJSONObject("userDetail").toJavaObject(RGPSecurityUserDetails.class);
+//        return userDetails;
+        return new UserDetails() {
+            private static final long serialVersionUID = -1866902516098613537L;
+
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return null;
+            }
+
+            @Override
+            public String getPassword() {
+                return null;
+            }
+
+            @Override
+            public String getUsername() {
+                return "dreamT";
+            }
+
+            @Override
+            public boolean isAccountNonExpired() {
+                return false;
+            }
+
+            @Override
+            public boolean isAccountNonLocked() {
+                return false;
+            }
+
+            @Override
+            public boolean isCredentialsNonExpired() {
+                return false;
+            }
+
+            @Override
+            public boolean isEnabled() {
+                return false;
+            }
+        };
     }
 }
