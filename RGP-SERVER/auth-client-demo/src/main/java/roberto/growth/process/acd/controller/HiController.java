@@ -40,6 +40,11 @@ public class HiController {
         return "hi :" + ",i am from port:" + port;
     }
 
+    @RequestMapping("/me")
+    public Object getCurrentUser(Authentication userDetails) {
+        return userDetails;
+    }
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @RequestMapping("/hello")
     public String hello() {
