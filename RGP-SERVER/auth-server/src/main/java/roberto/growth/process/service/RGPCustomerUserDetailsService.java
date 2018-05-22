@@ -18,6 +18,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import roberto.growth.process.feign.UserCenterFeignClient;
+import roberto.growth.process.uc.api.vo.domain.UserDetail;
+import roberto.growth.process.uc.api.vo.request.GetUserByUsernameRequest;
+import roberto.growth.process.uc.api.vo.response.GetUserByUsernameResponse;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -32,8 +36,15 @@ public class RGPCustomerUserDetailsService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserCenterFeignClient userCenterFeignClient;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new User(username, passwordEncoder.encode("dreamT"), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+        GetUserByUsernameRequest getUserByUsernameRequest = new GetUserByUsernameRequest();
+        getUserByUsernameRequest.setUsername(username);
+        GetUserByUsernameResponse getUserByUsernameResponse = userCenterFeignClient.getUserByUsername(getUserByUsernameRequest);
+        UserDetail userDetail = getUserByUsernameResponse.getUserDetail();
+        return new User(userDetail.getUsername(), passwordEncoder.encode("dreamT"), AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
     }
 }

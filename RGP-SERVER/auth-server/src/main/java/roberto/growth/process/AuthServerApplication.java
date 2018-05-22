@@ -13,6 +13,7 @@ package roberto.growth.process;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -23,6 +24,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
  * @since 1.0.0
  */
 @EnableEurekaClient
+@EnableFeignClients
 @SpringBootApplication
 public class AuthServerApplication {
     public static void main(String[] args) {

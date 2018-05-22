@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import roberto.growth.process.uc.api.exception.RGPUserCenterException;
 import roberto.growth.process.uc.api.vo.request.GetUserByPhoneNumberRequest;
+import roberto.growth.process.uc.api.vo.request.GetUserByUsernameRequest;
 import roberto.growth.process.uc.api.vo.request.SaveUserRequest;
 import roberto.growth.process.uc.api.vo.request.ValidateUserRequest;
 import roberto.growth.process.uc.api.vo.response.GetUserByPhoneNumberResponse;
+import roberto.growth.process.uc.api.vo.response.GetUserByUsernameResponse;
 import roberto.growth.process.uc.api.vo.response.SaveUserResponse;
 import roberto.growth.process.uc.api.vo.response.ValidateUserResponse;
 
@@ -67,4 +69,7 @@ public interface UserServiceApi {
      */
     @GetMapping(value = "/user/getByPhoneNumber")
     GetUserByPhoneNumberResponse getUserByPhoneNumber(GetUserByPhoneNumberRequest getUserByPhoneNumberRequest) throws RGPUserCenterException;
+
+    @GetMapping(value = "/user/getByUsername")
+    GetUserByUsernameResponse getUserByUsername(GetUserByUsernameRequest getUserByUsernameRequest);
 }
