@@ -4,7 +4,7 @@ spring:
       discovery:
         enabled: true
         service-id: CONFIG-SERVICE
-      label: master
+      label: develop
       profile: dev
       name: usercenter
 
