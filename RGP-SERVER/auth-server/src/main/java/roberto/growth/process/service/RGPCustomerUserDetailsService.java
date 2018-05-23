@@ -19,8 +19,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import roberto.growth.process.feign.UserCenterFeignClient;
+import roberto.growth.process.uc.api.exception.RGPUserCenterException;
 import roberto.growth.process.uc.api.vo.domain.UserDetail;
+import roberto.growth.process.uc.api.vo.request.GetUserByPhoneNumberRequest;
 import roberto.growth.process.uc.api.vo.request.GetUserByUsernameRequest;
+import roberto.growth.process.uc.api.vo.response.GetUserByPhoneNumberResponse;
 import roberto.growth.process.uc.api.vo.response.GetUserByUsernameResponse;
 
 /**
@@ -41,6 +44,16 @@ public class RGPCustomerUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        GetUserByPhoneNumberRequest getUserByPhoneNumberRequest = new GetUserByPhoneNumberRequest();
+        getUserByPhoneNumberRequest.setPhoneNumber("12345");
+        GetUserByPhoneNumberResponse getUserByPhoneNumberResponse = null;
+        try {
+            getUserByPhoneNumberResponse = userCenterFeignClient.getUserByPhoneNumber(getUserByPhoneNumberRequest);
+        } catch (RGPUserCenterException e) {
+            e.printStackTrace();
+        }
+        System.out.println(getUserByPhoneNumberResponse);
+
         GetUserByUsernameRequest getUserByUsernameRequest = new GetUserByUsernameRequest();
         getUserByUsernameRequest.setUsername(username);
         GetUserByUsernameResponse getUserByUsernameResponse = userCenterFeignClient.getUserByUsername(getUserByUsernameRequest);

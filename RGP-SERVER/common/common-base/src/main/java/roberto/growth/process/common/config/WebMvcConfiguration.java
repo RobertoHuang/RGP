@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
@@ -50,12 +51,12 @@ public class WebMvcConfiguration implements ApplicationContextAware, ResourceLoa
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/resources/");
     }
 
-//    @Bean
+    @Bean
     public HttpMessageConverter<?> stringHttpMessageConverter() {
         return new CustomerStringHttpMessageConverter();
     }
 
-//    @Bean
+    @Bean
     public HttpMessageConverter<?> fastJsonHttpMessageConverter() {
         CustomerFastJsonHttpMessageConverter converter = new CustomerFastJsonHttpMessageConverter();
 
