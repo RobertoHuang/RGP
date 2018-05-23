@@ -12,7 +12,11 @@ spring:
     password: root
   jpa:
     show-sql: true
-
+  rabbitmq:
+    port: 5672
+    username: guest
+    password: guest
+    host: 192.168.56.128
 management:
   server:
     port: 9001
@@ -22,3 +26,4 @@ management:
         include: '*'
     shutdown:
       enable: true
+roberto: roberto
