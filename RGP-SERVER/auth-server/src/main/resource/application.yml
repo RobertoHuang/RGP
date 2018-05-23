@@ -18,4 +18,6 @@ ribbon:
 
 logging:
   level:
+    # 与Decoder相关 SynchronousMethodHandler.executeAndDecode
+    # --> logger.logAndRebufferResponse 若未配置Feign Decoder需要手动解析
     roberto.growth.process: debug
