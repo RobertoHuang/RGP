@@ -18,7 +18,6 @@ import roberto.growth.process.uc.api.api.UserServiceApi;
 import roberto.growth.process.uc.api.exception.RGPUserCenterException;
 import roberto.growth.process.uc.api.vo.domain.UserDetail;
 import roberto.growth.process.uc.api.vo.request.GetUserByPhoneNumberRequest;
-import roberto.growth.process.uc.api.vo.request.GetUserByUsernameRequest;
 import roberto.growth.process.uc.api.vo.request.SaveUserRequest;
 import roberto.growth.process.uc.api.vo.request.ValidateUserRequest;
 import roberto.growth.process.uc.api.vo.response.GetUserByPhoneNumberResponse;
@@ -93,9 +92,9 @@ public class UserServiceApiImpl implements UserServiceApi {
     }
 
     @Override
-    public GetUserByUsernameResponse getUserByUsername(GetUserByUsernameRequest getUserByUsernameRequest) {
+    public GetUserByUsernameResponse getUserByUsername(String username) {
         // 通过手机号码查找用户信息
-        String username = getUserByUsernameRequest.getUsername();
+        // TODO
 
         // 返回响应数据
         UserDetail userDetail = new UserDetail();

@@ -12,6 +12,7 @@ package roberto.growth.process.uc.api.vo.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import roberto.growth.process.common.vo.response.RGPBaseResponse;
 import roberto.growth.process.uc.api.vo.domain.UserDetail;
@@ -26,6 +27,7 @@ import roberto.growth.process.uc.api.vo.domain.UserDetail;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class GetUserByPhoneNumberResponse extends RGPBaseResponse{
     private static final long serialVersionUID = -5897638618968018656L;
