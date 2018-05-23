@@ -11,24 +11,23 @@
 package roberto.growth.process.security.browser.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.session.InvalidSessionStrategy;
+import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
 import roberto.growth.process.common.utils.DatabaseUtils;
-import roberto.growth.process.security.browser.authentication.mobile.SMSCaptchaAuthenticationConfig;
-import roberto.growth.process.security.browser.service.CustomerUserDetailsService;
+import roberto.growth.process.security.core.config.captcha.CaptchaSecurityConfiguration;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
+import roberto.growth.process.security.core.service.CustomerUserDetailsService;
 
 import javax.annotation.Resource;
 import javax.servlet.Filter;
@@ -43,13 +42,12 @@ import javax.sql.DataSource;
  * @since 1.0.0
  */
 @Configuration
-@EnableConfigurationProperties(CustomerSecurityProperties.class)
 public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Resource(name = "verifyCaptchaFilter")
-    private Filter verifyCaptchaFilter;
-
     @Autowired
     private DataSource dataSource;
+
+    @Resource(name = "captchaAuthenticationFilter")
+    private Filter captchaAuthenticationFilter;
 
     @Autowired
     private CustomerUserDetailsService customerUserDetailsService;
@@ -69,11 +67,25 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Resource(name = "customerAuthenticationFailureHandler")
     private AuthenticationFailureHandler customerAuthenticationFailureHandler;
 
+    @Autowired
+    private LogoutSuccessHandler logoutSuccessHandler;
+
+    @Autowired
+    private InvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
+    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
+
+    @Autowired
+    private CaptchaSecurityConfiguration captchaSecurityConfiguration;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.apply(smsCaptchaAuthenticationConfig)
                 .and()
             .apply(springSocialConfigurer)
+                .and()
+            .apply(captchaSecurityConfiguration)
                 .and()
             .formLogin()
                 // 配置登录页
@@ -86,24 +98,26 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl(customerSecurityProperties.getBrowser().getFormLoginProcessUrl()).and()
             .authorizeRequests()
                 .antMatchers(
-                        SecurityConstants.STATIC_RESOURCE,
-                        SecurityConstants.GENERATE_CAPTCHA_URL_NOT_INTERCEPT,
-                        customerSecurityProperties.getBrowser().getSignInPage(),
-                        customerSecurityProperties.getBrowser().getFormLoginProcessUrl(),
-                        customerSecurityProperties.getBrowser().getMobileLoginProcessUrl()).permitAll()
+                    SecurityConstants.STATIC_RESOURCE,
+                    SecurityConstants.GENERATE_CAPTCHA_URL_NOT_INTERCEPT,
+                    customerSecurityProperties.getBrowser().getSignInPage(),
+                    customerSecurityProperties.getBrowser().getFormLoginProcessUrl(),
+                    customerSecurityProperties.getBrowser().getMobileLoginProcessUrl()).permitAll()
                 .anyRequest().authenticated().and()
+            .sessionManagement()
+                .invalidSessionStrategy(invalidSessionStrategy)
+                .maximumSessions(customerSecurityProperties.getBrowser().getSession().getMaximumSessions())
+                .maxSessionsPreventsLogin(customerSecurityProperties.getBrowser().getSession().isMaxSessionsPreventsLogin())
+                .expiredSessionStrategy(sessionInformationExpiredStrategy).and().and()
+            .logout()
+                .logoutUrl(customerSecurityProperties.getBrowser().getLogoutUrl())
+                .logoutSuccessHandler(logoutSuccessHandler)
+                .deleteCookies("JSESSIONID").and()
             .rememberMe()
                 .userDetailsService(customerUserDetailsService)
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(customerSecurityProperties.getBrowser().getRememberMeSeconds()).and()
-            .addFilterBefore(verifyCaptchaFilter, AbstractPreAuthenticatedProcessingFilter.class)
             .csrf().disable();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        // 配置密码加密算法
-        return new BCryptPasswordEncoder();
     }
 
     @Bean

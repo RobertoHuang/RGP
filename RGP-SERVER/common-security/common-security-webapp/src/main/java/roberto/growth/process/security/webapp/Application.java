@@ -13,7 +13,6 @@ package roberto.growth.process.security.webapp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * 〈一句话功能简述〉<br> 
@@ -28,10 +27,5 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-    }
-
-    @GetMapping("/hello")
-    public String helloWorld(){
-        return "Hello World";
     }
 }

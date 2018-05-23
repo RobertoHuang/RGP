@@ -19,11 +19,11 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.roberto.growth.process</groupId>
-            <artifactId>common-security-browser</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.roberto.growth.process</groupId>-->
+            <!--<artifactId>common-security-browser</artifactId>-->
+            <!--<version>1.0.0-SNAPSHOT</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -46,6 +46,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>user-center-webapp</finalName>
+        <finalName>common-security-webapp</finalName>
     </build>
 </project>

@@ -14,8 +14,11 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.ServletWebRequest;
+import roberto.growth.process.security.core.config.captcha.store.CaptchaRepository;
 import roberto.growth.process.security.core.constant.SecurityConstants;
+import roberto.growth.process.security.core.enums.RGPCaptchaGenerateTypeEnum;
 import roberto.growth.process.security.core.exception.ValidateCaptchaException;
 import roberto.growth.process.security.core.model.IMGCaptcha;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
@@ -37,9 +40,11 @@ public class IMGCaptchaStrategy extends ABSCaptchaStrategy<IMGCaptcha> {
     private DefaultKaptcha captchaProducer;
 
     @Autowired
+    private CaptchaRepository<IMGCaptcha> captchaRepository;
+
+    @Autowired
     private CustomerSecurityProperties customerSecurityProperties;
 
-    private final String SESSION_KEY = SecurityConstants.CAPTCHA_SESSION_KEY_PREFIX + "IMG";
     private final String PARAMNAME_ON_VALIDATE = SecurityConstants.DEFAULT_PARAMETER_NAME_CODE_IMG;
 
     @Override
@@ -53,22 +58,27 @@ public class IMGCaptchaStrategy extends ABSCaptchaStrategy<IMGCaptcha> {
     }
 
     @Override
-    protected String getSessionKey() {
-        return SESSION_KEY;
-    }
-
-    @Override
     protected void sendCaptcha(ServletWebRequest request, IMGCaptcha captcha) throws Exception {
         ImageIO.write(captcha.getImage(), "JPEG", request.getResponse().getOutputStream());
     }
 
     @Override
-    protected void validateCaptchaInStrategy(ServletWebRequest request, IMGCaptcha captcha) {
-        String codeInRequest = request.getRequest().getParameter(PARAMNAME_ON_VALIDATE);
-        if (StringUtils.isBlank(codeInRequest)) {
-            throw new ValidateCaptchaException("验证码的值不能为空");
-        } else if (!StringUtils.equals(captcha.getCode(), codeInRequest)) {
-            throw new ValidateCaptchaException("输入的验证码不正确");
+    public void validateCaptcha(ServletWebRequest request) {
+        // 获取验证码
+        IMGCaptcha captcha = captchaRepository.get(request, RGPCaptchaGenerateTypeEnum.IMG);
+        if (ObjectUtils.isEmpty(captcha)) {
+            throw new ValidateCaptchaException("验证码不存在");
+        } else if (captcha.isCaptchaExpried()) {
+            throw new ValidateCaptchaException("验证码已过期");
+        } else {
+            // 使用具体策略校验验证码
+            String codeInRequest = request.getRequest().getParameter(PARAMNAME_ON_VALIDATE);
+            if (StringUtils.isBlank(codeInRequest)) {
+                throw new ValidateCaptchaException("验证码的值不能为空");
+            } else if (!StringUtils.equals(captcha.getCode(), codeInRequest)) {
+                throw new ValidateCaptchaException("输入的验证码不正确");
+            }
+            captchaRepository.remove(request, RGPCaptchaGenerateTypeEnum.IMG);
         }
     }
 }

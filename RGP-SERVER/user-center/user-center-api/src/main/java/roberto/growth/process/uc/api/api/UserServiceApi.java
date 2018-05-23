@@ -12,11 +12,13 @@ package roberto.growth.process.uc.api.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import roberto.growth.process.uc.api.exception.RGPUserCenterException;
 import roberto.growth.process.uc.api.vo.request.GetUserByPhoneNumberRequest;
 import roberto.growth.process.uc.api.vo.request.SaveUserRequest;
 import roberto.growth.process.uc.api.vo.request.ValidateUserRequest;
 import roberto.growth.process.uc.api.vo.response.GetUserByPhoneNumberResponse;
+import roberto.growth.process.uc.api.vo.response.GetUserByUsernameResponse;
 import roberto.growth.process.uc.api.vo.response.SaveUserResponse;
 import roberto.growth.process.uc.api.vo.response.ValidateUserResponse;
 
@@ -65,6 +67,9 @@ public interface UserServiceApi {
      * @author HuangTaiHong
      * @date 2018.04.26 14:40:47
      */
-    @GetMapping(value = "/user/getByPhoneNumber")
+    @PostMapping(value = "/user/getByPhoneNumber")
     GetUserByPhoneNumberResponse getUserByPhoneNumber(GetUserByPhoneNumberRequest getUserByPhoneNumberRequest) throws RGPUserCenterException;
+
+    @GetMapping(value = "/user/getByUsername")
+    GetUserByUsernameResponse getUserByUsername(@RequestParam(name = "username") String username);
 }

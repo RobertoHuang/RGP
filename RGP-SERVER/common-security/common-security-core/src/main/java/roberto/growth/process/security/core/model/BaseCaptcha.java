@@ -11,31 +11,41 @@
 package roberto.growth.process.security.core.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import roberto.growth.process.security.core.enums.RGPCaptchaGenerateTypeEnum;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 〈一句话功能简述〉<br> 
+ * 〈一句话功能简述〉<br>
  * 〈验证码基类〉
  *
  * @author HuangTaiHong
- * @create 2018-03-29 
+ * @create 2018-03-29
  * @since 1.0.0
  */
 @Getter
 @Setter
-public class BaseCaptcha {
-    /**
-     * 验证码过期时间
-     **/
+@NoArgsConstructor
+public class BaseCaptcha implements Serializable {
+    private static final long serialVersionUID = -4342392387582118978L;
+
+    /** 验证码 **/
+    private String code;
+
+    /** 验证码过期时间 **/
     private LocalDateTime expireTime;
 
-    /**
-     * expireIn 单位(s)
-     **/
-    public BaseCaptcha(int expireIn) {
+    /** 验证码类型 **/
+    private RGPCaptchaGenerateTypeEnum rgpCaptchaGenerateTypeEnum;
+
+    /** expireIn 单位(s) **/
+    public BaseCaptcha(String code, int expireIn, RGPCaptchaGenerateTypeEnum rgpCaptchaGenerateTypeEnum) {
+        this.code = code;
         this.expireTime = LocalDateTime.now().plusSeconds(expireIn);
+        this.rgpCaptchaGenerateTypeEnum = rgpCaptchaGenerateTypeEnum;
     }
 
     /**

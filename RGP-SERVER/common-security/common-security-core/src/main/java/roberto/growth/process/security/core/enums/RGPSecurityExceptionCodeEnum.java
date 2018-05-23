@@ -23,7 +23,7 @@ import lombok.Getter;
 @Getter
 public enum RGPSecurityExceptionCodeEnum {
     CAPTCHA_GENERATE_STRATEGY_NOT_FOUND("E00001", "验证码生成策略未找到"), CREATE_CAPTCHA_ERROR("E00002", "创建验证码失败"),
-    SEND_SMS_CAPTCHA_ERROR("E00003", "发送短信验证码失败");
+    SEND_SMS_CAPTCHA_ERROR("E00003", "发送短信验证码失败"), DEVICEID_NOT_EXIST("E00004", "请在请求头中携带deviceId参数");
 
     private final String code;
     private final String value;

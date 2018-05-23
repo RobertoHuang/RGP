@@ -13,7 +13,8 @@
         <module>common-security</module>
         <module>infrastructure</module>
         <module>user-center</module>
-        <module>user-auth</module>
+        <module>auth-server</module>
+        <module>auth-client-demo</module>
     </modules>
 
     <properties>

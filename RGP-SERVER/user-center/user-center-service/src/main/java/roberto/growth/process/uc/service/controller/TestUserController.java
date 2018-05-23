@@ -11,6 +11,7 @@
 package roberto.growth.process.uc.service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,15 @@ import roberto.growth.process.uc.service.service.UserService;
 public class TestUserController {
     @Autowired
     private UserService userService;
+
+    @Value("${roberto}")
+    private String robertoHHH;
+
+    @RequestMapping("/hi")
+    public String testAutoConfig() {
+        System.out.println(robertoHHH);
+        return "";
+    }
 
     @RequestMapping(value = "/test/user")
     public ResponseEntity<User> getUserDetails() {

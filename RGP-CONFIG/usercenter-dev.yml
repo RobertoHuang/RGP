@@ -1,0 +1,24 @@
+server:
+  port: 8883
+
+spring:
+  application:
+    name: USER-CENTER
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.56.128:3306/user-center?userUnicode=true&characterEncoding=utf8&characterSetResults=utf8
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+
+management:
+  server:
+    port: 9001
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+    shutdown:
+      enable: true

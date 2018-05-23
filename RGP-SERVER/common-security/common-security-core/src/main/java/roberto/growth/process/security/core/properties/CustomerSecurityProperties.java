@@ -35,6 +35,6 @@ public class CustomerSecurityProperties {
     /** 用户中心配置属性 **/
     private UserCenterProperties uc = new UserCenterProperties();
 
-    /** Spring **/
+    /** Spring Social相关配置**/
     private SocialProperties social = new SocialProperties();
 }

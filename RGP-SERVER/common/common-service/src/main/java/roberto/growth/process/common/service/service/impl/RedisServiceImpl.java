@@ -35,12 +35,12 @@ public class RedisServiceImpl<T> implements RedisService<T> {
 
     @Override
     public void deleteCacheObject(String key) {
-        reactiveRedisTemplate.delete(key);
+        reactiveRedisTemplate.delete(key).block();
     }
 
     @Override
     public void deleteCacheCollection(Collection collection) {
-        reactiveRedisTemplate.delete(collection);
+        reactiveRedisTemplate.delete(collection).block();
     }
 
     @Override

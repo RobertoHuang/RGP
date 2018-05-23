@@ -10,14 +10,12 @@
  */
 package roberto.growth.process.security.webapp.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roberto.growth.process.common.exception.RGPBaseException;
-import roberto.growth.process.security.webapp.entity.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 〈一句话功能简述〉<br>
@@ -28,42 +26,10 @@ import java.util.List;
  * @since 1.0.0
  */
 @RestController
+@RequestMapping("/user")
 public class UserController {
-    @PostMapping("/user")
-    public List<User> userList(@RequestBody User user33) throws RGPBaseException {
-        try {
-            testException2();
-        } catch (Exception e) {
-            throw new RGPBaseException("111", "jhdfhsdfds", e);
-        }
-
-        User user = new User("roberto", "dreamT");
-        User user2 = new User("roberto", "dreamT");
-        User user3 = new User("roberto", "dreamT");
-
-        List<User> userList = new ArrayList<>();
-        userList.add(user);
-        userList.add(user2);
-        userList.add(user3);
-
-        return userList;
-    }
-
-    public void testException() throws ClassNotFoundException {
-        try {
-            System.out.println(1 / 0);
-        } catch (Exception e) {
-            ClassNotFoundException classNotFoundException = new ClassNotFoundException("111", e);
-            throw classNotFoundException;
-        }
-    }
-
-    public void testException2() throws RGPBaseException {
-        try {
-            testException();
-        } catch (Exception e) {
-            RuntimeException connectException = new RuntimeException("123123", e);
-            throw connectException;
-        }
+    @GetMapping("/me")
+    public Object getCurrentUser(Authentication user, HttpServletRequest request) {
+        return user;
     }
 }

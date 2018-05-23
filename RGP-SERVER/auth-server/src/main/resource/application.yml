@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: AUTH-SERVICE
+
+server:
+  port: 8762
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    # Eureka服务注册列表默认是显示主机名+端口
+    prefer-ip-address: true
+
+ribbon:
+  # 请求处理的超时时间
+  ReadTimeout: 120000
+  # 请求连接的超时时间
+  ConnectTimeout: 30000
+
+logging:
+  level:
+    # 与Decoder相关 SynchronousMethodHandler.executeAndDecode
+    # --> logger.logAndRebufferResponse 若未配置Feign Decoder需要手动解析
+    roberto.growth.process: debug
