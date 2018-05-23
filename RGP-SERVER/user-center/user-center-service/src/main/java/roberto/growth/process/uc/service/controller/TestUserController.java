@@ -33,11 +33,11 @@ public class TestUserController {
     private UserService userService;
 
     @Value("${roberto}")
-    private String robertoHHH;
+    private String roberto;
 
     @RequestMapping("/hi")
     public String testAutoConfig() {
-        System.out.println(robertoHHH);
+        System.out.println(roberto);
         return "";
     }
 
