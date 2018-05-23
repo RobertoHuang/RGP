@@ -26,4 +26,4 @@ management:
         include: '*'
     shutdown:
       enable: true
-roberto: robertoTest
+roberto: roberto
