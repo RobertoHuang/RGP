@@ -22,8 +22,7 @@ management:
     port: 9001
   endpoints:
     web:
-      exposure:
-        include: '*'
+      exposure: '*'
     shutdown:
       enable: true
 roberto: roberto
