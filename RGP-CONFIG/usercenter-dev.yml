@@ -17,6 +17,7 @@ spring:
     username: guest
     password: guest
     host: 192.168.56.128
+    
 management:
   server:
     port: 9001
@@ -26,4 +27,11 @@ management:
         include: '*'
     shutdown:
       enable: true
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+
 roberto: roberto
+
