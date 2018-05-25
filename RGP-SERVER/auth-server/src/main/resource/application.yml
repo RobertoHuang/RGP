@@ -1,6 +1,16 @@
 spring:
   application:
     name: AUTH-SERVICE
+  sleuth:
+    web:
+      client:
+        enabled: true
+    sampler:
+      # 将采样比例设置为1.0，也就是全部都需要 默认是0.1
+      probability: 1.0
+  zipkin:
+    # 指定了 Zipkin 服务器的地址
+    base-url: http://192.168.56.128:9411/
 
 server:
   port: 8762
@@ -26,3 +36,15 @@ logging:
     # 与Decoder相关 SynchronousMethodHandler.executeAndDecode
     # --> logger.logAndRebufferResponse 若未配置Feign Decoder需要手动解析
     roberto.growth.process: debug
+
+feign:
+  hystrix:
+    enabled: true
+
+management:
+  endpoints:
+    shutdown:
+      enable: true
+    web:
+      exposure:
+        include: '*'

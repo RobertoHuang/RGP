@@ -17,12 +17,21 @@ spring:
     username: guest
     password: guest
     host: 192.168.56.128
+    
 management:
   server:
     port: 9001
   endpoints:
     web:
-      exposure: '*'
+      exposure: 
+        include: '*'
     shutdown:
       enable: true
-roberto: roberto333
+
+eureka:
+  client:
+    healthcheck:
+      enabled: true
+
+roberto: roberto
+

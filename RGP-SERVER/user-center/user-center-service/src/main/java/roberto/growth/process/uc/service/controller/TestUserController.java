@@ -10,8 +10,11 @@
  */
 package roberto.growth.process.uc.service.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +30,7 @@ import roberto.growth.process.uc.service.service.UserService;
  * @create 2018-04-19
  * @since 1.0.0
  */
+@RefreshScope
 @RestController
 public class TestUserController {
     @Autowired
@@ -36,7 +40,18 @@ public class TestUserController {
     private String roberto;
 
     @RequestMapping("/hi")
-    public String testAutoConfig() {
+    @HystrixCommand(fallbackMethod = "testAutoConfigFallBack", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
+            @HystrixProperty(name =  "circuitBreaker.enabled",value = "true"),
+            @HystrixProperty(name =  "circuitBreaker.requestVolumeThreshold",value = "10"),
+            @HystrixProperty(name =  "circuitBreaker.sleepWindowInMilliseconds",value = "10000"),
+            @HystrixProperty(name =  "circuitBreaker.errorThresholdPercentage",value = "50"),
+    })
+    public String testAutoConfig() throws InterruptedException {
+        boolean flag = true;
+        if (flag) {
+            throw new RuntimeException("服务器忙");
+        }
         System.out.println(roberto);
         return "";
     }
@@ -52,6 +67,10 @@ public class TestUserController {
     @RequestMapping(value = "/user/get")
     public ResponseEntity<User> getUser() {
         String id = "41280540844257280";
-        return new ResponseEntity( userService.getUserInfo(id), HttpStatus.OK);
+        return new ResponseEntity(userService.getUserInfo(id), HttpStatus.OK);
+    }
+
+    public String testAutoConfigFallBack() {
+        return "服务器忙 请稍后重试";
     }
 }
