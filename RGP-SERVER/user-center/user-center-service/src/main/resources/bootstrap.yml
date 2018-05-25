@@ -15,3 +15,11 @@ eureka:
   instance:
     # Eureka服务注册列表默认是显示主机名+端口
     prefer-ip-address: true
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000

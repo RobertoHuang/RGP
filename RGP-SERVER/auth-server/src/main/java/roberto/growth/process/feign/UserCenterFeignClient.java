@@ -11,6 +11,7 @@
 package roberto.growth.process.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import roberto.growth.process.feign.fallback.UserCenterFeignClientFallBack;
 import roberto.growth.process.uc.api.api.UserServiceApi;
 
 /**
@@ -21,7 +22,7 @@ import roberto.growth.process.uc.api.api.UserServiceApi;
  * @create 2018/5/23
  * @since 1.0.0
  */
-@FeignClient(value = "USER-CENTER")
+@FeignClient(value = "USER-CENTER",fallback = UserCenterFeignClientFallBack.class)
 public interface UserCenterFeignClient extends UserServiceApi {
 
 }

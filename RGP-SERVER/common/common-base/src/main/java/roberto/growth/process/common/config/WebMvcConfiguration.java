@@ -49,6 +49,8 @@ public class WebMvcConfiguration implements ApplicationContextAware, ResourceLoa
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 配置静态资源访问路径
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/");
     }
 
     @Bean
