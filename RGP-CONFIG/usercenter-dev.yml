@@ -17,13 +17,17 @@ spring:
     username: guest
     password: guest
     host: 192.168.56.128
-    
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: roberto.growth.process.uc.service.entity
+
 management:
   server:
     port: 9001
   endpoints:
     web:
-      exposure: 
+      exposure:
         include: '*'
     shutdown:
       enable: true
@@ -34,4 +38,3 @@ eureka:
       enabled: true
 
 roberto: roberto
-
