@@ -11,25 +11,20 @@
 package roberto.growth.process.security.browser.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 import org.springframework.social.security.SpringSocialConfigurer;
-import roberto.growth.process.common.utils.DatabaseUtils;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 import roberto.growth.process.security.core.service.CustomerUserDetailsService;
 
 import javax.annotation.Resource;
-import javax.servlet.Filter;
 import javax.sql.DataSource;
 
 /**
@@ -44,7 +39,6 @@ import javax.sql.DataSource;
 public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
-
 
     @Autowired
     private CustomerUserDetailsService customerUserDetailsService;
@@ -101,21 +95,6 @@ public class BrowserSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutUrl(customerSecurityProperties.getBrowser().getLogoutUrl())
                 .logoutSuccessHandler(logoutSuccessHandler)
                 .deleteCookies("JSESSIONID").and()
-            .rememberMe()
-                .userDetailsService(customerUserDetailsService)
-                .tokenRepository(persistentTokenRepository())
-                .tokenValiditySeconds(customerSecurityProperties.getBrowser().getRememberMeSeconds()).and()
             .csrf().disable();
-    }
-
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
-        tokenRepository.setDataSource(dataSource);
-        // 如果保存Token的表不存在则创建
-        if (!DatabaseUtils.isTableExist(dataSource, "persistent_logins")) {
-            tokenRepository.setCreateTableOnStartup(true);
-        }
-        return tokenRepository;
     }
 }
