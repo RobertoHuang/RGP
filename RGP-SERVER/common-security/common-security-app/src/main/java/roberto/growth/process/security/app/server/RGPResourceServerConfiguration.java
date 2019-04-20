@@ -17,8 +17,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.social.security.SpringSocialConfigurer;
 import roberto.growth.process.security.app.config.form.FormAuthenticationConfiguration;
-import roberto.growth.process.security.core.config.captcha.CaptchaSecurityConfiguration;
-import roberto.growth.process.security.core.config.captcha.sms.SMSCaptchaSecurityConfiguration;
 import roberto.growth.process.security.core.constant.SecurityConstants;
 import roberto.growth.process.security.core.properties.CustomerSecurityProperties;
 
@@ -47,24 +45,13 @@ public class RGPResourceServerConfiguration extends ResourceServerConfigurerAdap
     private SpringSocialConfigurer springSocialConfigurer;
 
     @Autowired
-    /** 图形验证码配置 **/
-    private CaptchaSecurityConfiguration captchaSecurityConfiguration;
-
-    @Autowired
-    /** 短信验证码配置 **/
-    private SMSCaptchaSecurityConfiguration smsCaptchaSecurityConfiguration;
-
-    @Autowired
     /** 表单登陆相关配置 **/
     private FormAuthenticationConfiguration formAuthenticationConfiguration;
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         formAuthenticationConfiguration.configure(http);
-        http.apply(captchaSecurityConfiguration)
-                .and()
-            .apply(smsCaptchaSecurityConfiguration)
-                .and()
+        http
             .apply(springSocialConfigurer)
                 .and()
             .authorizeRequests()

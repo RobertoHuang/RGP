@@ -29,9 +29,6 @@ public class CustomerSecurityProperties {
     /** 浏览器配置属性 **/
     private BrowserProperties browser = new BrowserProperties();
 
-    /** 验证码配置属性 **/
-    private CaptchaProperties captcha = new CaptchaProperties();
-
     /** 用户中心配置属性 **/
     private UserCenterProperties uc = new UserCenterProperties();
 
